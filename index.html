@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Libreta Roca">
+<title>Libreta digital regional</title>
+<style>
+:root{--navy:#13294B;--oro:#A8701A;--ground:#F3F1EC;--ink:#1F231F;--ink3:#6B7268;
+ --line:#D8D4C9;--card:#fff;--ok:#2F5D57;--warn:#8A2B10;--soft:#F8F6F1}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;-webkit-text-size-adjust:100%}
+body{background:var(--ground);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+button,input,textarea,select{font:inherit;color:inherit;font-size:16px}
+button{touch-action:manipulation;cursor:pointer}
+header{position:sticky;top:0;z-index:30;background:var(--navy);color:#fff;
+ padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top))}
+.hrow{display:flex;align-items:center;gap:10px}
+h1{margin:0;font-size:17px;font-weight:700;flex:1}
+.hsub{font-size:12px;opacity:.82;font-variant-numeric:tabular-nums}
+.hbtn{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:9px;padding:8px 12px;font-weight:700;font-size:14px}
+.tools{display:flex;gap:8px;padding:10px 14px 2px}
+.tools input{flex:1;min-width:0;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+main{padding:8px 14px 110px}
+.grp{margin:16px 0 7px;font-size:11.5px;font-weight:800;letter-spacing:.9px;color:var(--ink3);text-transform:uppercase}
+.row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--card);
+ border:1.5px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:7px}
+.who{flex:1;min-width:0}
+.who b{display:block;font-size:15.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.who span{display:block;font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cnt{flex:0 0 auto;font-size:12px;font-weight:800;color:var(--navy);background:var(--soft);
+ border:1.5px solid var(--line);border-radius:7px;padding:3px 8px;font-variant-numeric:tabular-nums}
+.cnt.z{color:var(--warn);border-color:var(--warn)}
+.empty{text-align:center;color:var(--ink3);padding:40px 10px;font-size:14px}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;gap:8px;
+ padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(243,241,236,.96);
+ border-top:1px solid var(--line)}
+.bottom button{flex:1;padding:14px 8px;border-radius:12px;border:1.5px solid var(--navy);
+ background:#fff;color:var(--navy);font-weight:700;font-size:14.5px}
+.bottom button.pri{background:var(--oro);border-color:var(--oro);color:#fff}
+.sheet{position:fixed;inset:0;z-index:50;background:var(--ground);overflow-y:auto;
+ -webkit-overflow-scrolling:touch;display:none;flex-direction:column}
+.sheet.on{display:flex}
+.sh{position:sticky;top:0;background:var(--navy);color:#fff;padding:12px 14px;
+ padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:8px;z-index:5}
+.sh button{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:9px;padding:9px 11px;font-weight:700;font-size:14px}
+.sh button:disabled{opacity:.35}
+.sh div{flex:1;min-width:0}
+.sh b{display:block;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sh span{display:block;font-size:11.5px;opacity:.82;font-variant-numeric:tabular-nums;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb{padding:14px 14px 130px;max-width:640px;margin:0 auto;width:100%}
+details{background:#fff;border:1.5px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+details[open]{border-color:var(--navy)}
+summary{padding:14px 15px;font-weight:700;font-size:15px;cursor:pointer;list-style:none;
+ display:flex;align-items:center;gap:9px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"▾";margin-left:auto;color:var(--ink3);font-size:13px}
+details[open] summary:after{content:"▴"}
+summary i{font-style:normal;font-size:11px;font-weight:800;color:var(--ok);background:#EAF0EE;
+ border-radius:6px;padding:2px 7px}
+summary i.e{color:var(--ink3);background:var(--soft)}
+summary i.w{color:var(--warn);background:#FBEAE5}
+.dbody{padding:4px 15px 16px;border-top:1px solid var(--line)}
+.f{display:block;margin:12px 0}
+.f label{display:block;font-size:12.5px;font-weight:700;color:var(--ink3);margin-bottom:5px}
+.f input,.f textarea,.f select{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+.f textarea{min-height:84px;resize:vertical}
+.f .ro{background:var(--soft);color:var(--ink3)}
+.two{display:flex;gap:10px}.two>*{flex:1;min-width:0}
+.three{display:flex;gap:8px;flex-wrap:wrap}.three>*{flex:1 1 29%;min-width:84px}
+.opts{display:flex;flex-wrap:wrap;gap:7px}
+.opt{padding:11px 14px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:14.5px}
+.opt.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.opt.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+.hint{font-size:12.5px;color:var(--ink3);margin:-2px 0 8px;line-height:1.4}
+.note{background:#fff;border:1.5px solid var(--oro);border-left-width:5px;border-radius:10px;
+ padding:11px 13px;font-size:13.5px;margin-bottom:12px;line-height:1.4}
+.note.bad{border-color:var(--warn);background:#FFF9F7}
+.note.ok{border-color:var(--ok);background:#F4F9F7}
+.add{width:100%;padding:14px;border-radius:12px;border:1.5px dashed var(--navy);background:#fff;
+ color:var(--navy);font-weight:700;font-size:15px;margin-bottom:10px}
+.del{border:1.5px solid var(--warn);background:#fff;color:var(--warn);border-radius:9px;
+ padding:9px 13px;font-weight:700;font-size:14px}
+.strc{border:1.5px solid var(--line);border-radius:11px;padding:11px 12px;margin-bottom:10px;background:var(--soft)}
+.strc .hd{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.strc .hd b{flex:1;font-size:13.5px}
+.saved{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;z-index:80;background:var(--ink);
+ color:#fff;padding:9px 17px;border-radius:20px;font-size:13.5px;font-weight:600;opacity:0;
+ pointer-events:none;transition:opacity .18s}
+.saved.on{opacity:.94}
+pre{white-space:pre;overflow:auto;background:#fff;border:1.5px solid var(--line);border-radius:10px;
+ padding:11px;font-size:10.5px;max-height:30vh;font-family:ui-monospace,Menlo,Consolas,monospace}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.kv b{font-variant-numeric:tabular-nums}
+.tbl{display:flex;align-items:center;gap:9px;background:#fff;border:1.5px solid var(--line);
+ border-radius:11px;padding:11px 12px;margin-bottom:8px}
+.tbl span{flex:1;font-weight:700;font-size:14.5px}
+.tbl em{font-style:normal;font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.pick{width:100%;text-align:left;padding:12px 13px;border:1.5px solid var(--line);
+ border-radius:10px;background:#fff;font-weight:600;display:flex;align-items:center;gap:8px}
+.pick span{flex:1}
+.pick.vacio span{color:var(--ink3);font-weight:500}
+.pick:after{content:"▾";color:var(--ink3);font-size:13px}
+.pq{position:sticky;z-index:4;background:var(--ground);padding:10px 14px 8px;
+ border-bottom:1px solid var(--line)}
+.pq input{width:100%;padding:13px;border:1.5px solid var(--navy);border-radius:11px;background:#fff}
+.op{display:block;width:100%;text-align:left;padding:14px 14px;margin-bottom:7px;
+ border:1.5px solid var(--line);border-radius:11px;background:#fff;font-weight:600;font-size:15px}
+.op.sel{border-color:var(--navy);background:var(--navy);color:#fff}
+.op.lim{color:var(--ink3);font-weight:500}
+.foto{display:flex;gap:8px;margin-top:4px}
+.foto button{flex:1;padding:14px 8px;border-radius:11px;border:1.5px solid var(--navy);
+ background:#fff;color:var(--navy);font-weight:700;font-size:14.5px}
+.foto button.pri{background:var(--navy);color:#fff}
+.foto button:disabled{opacity:.5}
+.tbl button{border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;
+ padding:8px 11px;font-weight:700;font-size:13.5px}
+.qbar{display:flex;gap:8px;margin-bottom:12px}
+.qbar button{flex:1;padding:11px 10px;border-radius:10px;border:1.5px solid var(--navy);
+ background:#fff;color:var(--navy);font-weight:700;font-size:14px}
+.qbar button.oro{border-color:var(--oro);color:var(--oro)}
+.gpsbtn{width:100%;padding:11px;border-radius:10px;border:1.5px solid var(--ok);background:#EAF0EE;
+ color:var(--ok);font-weight:700;font-size:14px;margin:4px 0 8px}
+
+/* Modal HTML nativo (reemplaza prompt() bloqueado en iOS WebViews) */
+.modal-bg{position:fixed;inset:0;z-index:90;background:rgba(19,41,75,.55);display:none;
+ align-items:center;justify-content:center;padding:16px}
+.modal-bg.on{display:flex}
+.modal-card{background:#fff;border-radius:16px;padding:18px;width:100%;max-width:400px;
+ box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.modal-card h3{margin:0 0 6px;font-size:17px;color:var(--navy)}
+.modal-card p{margin:0 0 12px;font-size:13.5px;color:var(--ink3);line-height:1.4}
+.modal-card input{width:100%;padding:13px;border:1.5px solid var(--navy);border-radius:10px;
+ background:#fff;margin-bottom:14px;text-transform:uppercase;font-weight:700}
+.modal-btns{display:flex;gap:8px}
+.modal-btns button{flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--line);
+ background:#fff;font-weight:700;font-size:14.5px}
+.modal-btns button.pri{background:var(--oro);border-color:var(--oro);color:#fff}
+.ios-warn{margin:10px 14px 2px;background:#FFF9F7;border:1.5px solid var(--warn);border-left-width:5px;
+ border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.4;display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <h1>Libreta digital regional</h1>
+    <span class="hsub" id="hs">0 est · 0 mx</span>
+  </div>
+</header>
+
+<div class="ios-warn" id="gradWarn" style="border-color:var(--oro);background:#FFFCF5">
+  <b>Coordenadas en grados:</b> <span id="gradN">0</span> estación(es) tienen el Este y el Norte
+  en WGS84, capturadas con la versión anterior del botón de GPS. La hoja Collar los espera en
+  metros Origen Bogotá.
+  <button type="button" id="gradFix" style="margin-top:8px;width:100%;padding:11px;border-radius:9px;
+   border:1.5px solid var(--oro);background:var(--oro);color:#fff;font-weight:700">Convertirlas ahora</button>
+</div>
+
+<div class="ios-warn" id="iosWarn">
+  <b>Aviso del navegador:</b> <span id="iosWarnTxt">Este visor restringe el guardado permanente. Exporte el respaldo antes de cerrar.</span>
+</div>
+
+<div class="tools">
+  <input id="q" type="search" placeholder="Buscar estación o muestra…" autocomplete="off">
+  <button type="button" class="hbtn" id="bNew" style="background:var(--oro)">+ Estación</button>
+</div>
+
+<main id="list"></main>
+
+<div class="bottom">
+  <button type="button" id="bExp" class="pri">Exportar</button>
+  <button type="button" id="bBak">Respaldo</button>
+  <button type="button" id="bCfg">Ajustes</button>
+</div>
+
+<!-- Modal propio compatible con iOS/Android -->
+<div class="modal-bg" id="modBox">
+  <div class="modal-card">
+    <h3 id="modTit">Nueva estación</h3>
+    <p id="modSub">Código de estación (Holeid), p. ej. HA-001, TOM-052</p>
+    <input id="modInp" type="text" placeholder="Ej. HA-001" autocomplete="off" autocapitalize="characters">
+    <div class="modal-btns">
+      <button type="button" id="modCancel">Cancelar</button>
+      <button type="button" class="pri" id="modOk">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<section class="sheet" id="shEst">
+  <div class="sh"><button type="button" id="cEst">Volver</button><div><b id="eName">—</b><span id="eMeta">—</span></div></div>
+  <div class="sb" id="eBody"></div>
+</section>
+
+<section class="sheet" id="shMx">
+  <div class="sh">
+    <button type="button" id="cMx">Volver</button>
+    <div><b id="mName">—</b><span id="mMeta">—</span></div>
+    <button type="button" id="mPrev" title="Muestra anterior">‹ Ant</button>
+    <button type="button" id="mNext" title="Muestra siguiente">Sig ›</button>
+  </div>
+  <div class="sb" id="mBody"></div>
+</section>
+
+<section class="sheet" id="shPick" style="z-index:60">
+  <div class="sh"><button type="button" id="cPick">Cancelar</button><div><b id="pName">—</b><span id="pMeta">—</span></div></div>
+  <div class="pq"><input id="pQ" type="search" placeholder="Escriba para filtrar…" autocomplete="off"></div>
+  <div class="sb" id="pBody" style="padding-top:12px"></div>
+</section>
+
+<section class="sheet" id="shOut">
+  <div class="sh"><button type="button" id="cOut">Volver</button><div><b id="oName">—</b><span id="oMeta">—</span></div></div>
+  <div class="sb" id="oBody"></div>
+</section>
+
+<div class="saved" id="toast">Guardado</div>
+
+<script>
+"use strict";
+var L = {
+  "Auxiliares": ["Hernan Cano", "Leonardo Molina", "Sebastian Granda", "Jhon Gomez", "Abel Quiroz", "Julian Agudelo"],
+  "Laboratorios": ["EGM"],
+  "TargetCodigo": ["SM - San Miguel", "STM - Santa Marta", "SR - San Ramón", "LP - La Playa", "LI - La Isla", "MAL - Malambo", "LG - Los Guapos", "PL - Playa Larga", "HA - Hilo Azul", "TOM - Tomatera", "MON - Mortiñal Norte", "SF - San Francisco"],
+  "TipoAfloramiento_PENDIENTE": ["Afloramiento", "Túnel/Socavón", "Talud/Carretera", "Trinchera"],
+  "Alt_Type_Cod": ["AARG3", "ARG1", "ARG2", "ARG3", "bi1", "ca1", "CARB1", "CARB2", "CARB3", "chl1", "chl2", "chl3", "ep1", "ep2", "N/A", "POT1", "POT3", "PROP1", "PROP3", "QSER1", "QSER2", "QSER3", "qz2", "sca1", "ser1", "ser2", "ser3", "SIL1", "SIL2", "SIL3"],
+  "Alt_Min_Cod": ["ALB_CHL", "ALB_EP_HB", "ANK_ZEO", "ARG", "ARG_CARB_CHL_ZEO", "ARG_CHL", "ARG_CHL_CARB", "BI", "BI_CARB_CHL_SER", "BI_CHL", "BI_CHL_EP", "BI_MT", "CARB", "CARB_CHL", "CARB_CHL_EP", "CARB_CHL_EP_FK_SALB_QZ", "CARB_CHL_FK", "CARB_CHL_QZ", "CARB_CHL_QZ_SER", "CARB_CHL_SALB", "CARB_CHL_SER", "CARB_CHL_ZEO", "CARB_EP", "CARB_FK_QZ", "CARB_KAO", "CARB_QZ", "CARB_SALB", "CARB_SER", "CARB_SER_ZEO", "CARB_ZEO", "CARB_ZEO_CHL_QZ", "CHL", "CHL_BI", "CHL_BI_SER", "CHL_CARB", "CHL_CARB_SER", "CHL_CARB_ZEO", "CHL_EP", "CHL_EP_FK", "CHL_EP_QZ", "CHL_EP_QZ_SER", "CHL_EP_SER", "CHL_FK", "CHL_FK_QZ", "CHL_FK_SER", "CHL_ILL", "CHL_QZ", "CHL_QZ_CARB", "CHL_QZ_SER", "CHL_SALB", "CHL_SER", "CHL_SMEC", "CHL_ZEO", "EP", "EP_CHL", "EP_FK", "FK", "FK_CHL", "FK_QZ", "MT", "QZ", "QZ_CARB", "QZ_CHL", "QZ_FK", "QZ_SER", "QZ_ZEO", "SER", "SER_CARB", "SER_CHL", "SER_CHL_KAO", "SMEC_ILL", "ZEO", "ZEO_CARB", "ZEO_CARB_CHL", "ZEO_CARB_SER", "ZEO_CHL", "SER_QZ", "CHL_SALB_SER", "EP_SER", "FK_CHL_QZ_CARB", "SALB", "SIENITA_CHL"],
+  "Alt_Style_Cod": ["DISS", "FRACT_C", "FRACT_Z", "HLO", "INTS", "MASS", "N/A", "PATCH", "PERV", "PODS", "STWK", "VN", "VNLT", "BND", "MOTT"],
+  "Int_Cod": ["WK", "MD", "ST", "VST", "SM", "T"],
+  "Mineraliz_Cod": ["cp", "ga", "ga-po", "ga-sp", "po", "po-cp", "po-ga", "po-sp", "po-sp-ga", "py", "py-cp", "py-ga", "py-ga-cp", "py-ga-po", "py-ga-sp", "py-po", "py-po-cp", "py-po-ga", "py-po-ga-cp", "py-po-sp", "py-po-sp-cp", "py-po-sp-ga", "py-sp", "py-sp-cp", "py-sp-ga", "py-sp-ga-cp", "py-sp-ga-po", "py-sp-po", "sp", "sp-cp", "sp-ga", "sp-ga-po", "sp-po"],
+  "Id_Litho_REAL (vigente - uso actual de campo)": ["AND", "DRT", "DRTD", "FBX", "FLT", "GOU", "GRDR", "GRSH", "MDIO", "N/A", "NR", "OVB", "QMONDRT", "SHZN", "TON", "VN", "SPGD", "DK", "VN_FLT", "MT", "MTSH", "SPRK"],
+  "Id_Structure_Type_REAL (vigente - uso actual de campo)": ["BX", "CT", "DK", "FL", "FOL", "STR", "VLT", "VN", "VN_FLT", "FRACT"],
+  "Id_Control_Type_REAL": ["BKF", "BKG", "DUP", "STD"],
+  "Id_Duplicate_Type_REAL (vigente - uso actual de campo)": ["Ori_C_Lab", "Dup_C_Lab", "Ori_P_Lab", "Dup_P_Lab", "Ori_Field", "Dup_Field"],
+  "Id_Sample_Type_REAL": ["Control", "Rock"],
+  "Id_Standard_Code_REAL (vigente - uso actual de campo)": ["CDN_GS_10E", "CDN_GS_2R", "CDN_CGS_22", "CDN_CGS_23", "CDN_GS_1K", "CDN_GS_20B", "CDN_GS_2G", "CDN_GS_2P", "CDN_GS_2S", "CDN_GS_4C", "CDN_GS_5K", "CDN_GS_5P", "CDN_GS_5Q", "CDN_GS_5W", "CDN_GS_8B", "CDN_GS_P3C", "RLab_SK62", "CDN_GS_2K", "BL", "FINEBLANK", "FBLK2", "FBLK1", "FBLK", "BL_OREAS_22C", "BL_10", "CBLK_Qz2mm", "CDN_GS_5T", "OREAS_22b", "OREAS_211b", "OREAS_236b", "OREAS_237b", "OREAS_240b", "OREAS_242b", "OREAS_243", "OREAS_245", "OREAS_247", "OREAS_255c", "OREAS_247b"],
+  "Id_Support_Type_REAL": ["Channel", "Core", "Detritus", "Grab", "Panel", "Selective", "Sedimento", "N/A"],
+  "Id_Collar_Type_REAL": ["Channel", "Core"],
+  "Id_Mineraliz_Type_REAL": ["MX", "N/A", "VN", "Gng"],
+  "Id_Area_REAL": ["DrillUnd18", "Reg18", "Channel18", "Iinfill18", "Explo18", "Channel24", "Infill25", "Infill26", "Reg26"],
+  "Id_Mineraliz_OtherMin_REAL": ["ARG", "asp", "Au", "ca", "ca-chlr-ser", "ca-clay-qz", "ca-qz", "ca-qz-ser", "carb", "carb-chlr", "carb-chlr-qz", "carb-clay", "carb-qz", "ca-ser", "chalc", "chlr", "chlr-carb", "chlr-goe", "chlr-qz", "CIN", "clay", "clay-ca", "clay-carb", "clay-chlr-qz", "clay-goe", "clay-goe-qz", "clay-qz-chlr", "clay-qz-goe", "clay-qz-ser", "clay-ser", "clay-ser-ca", "clay-ser-chlr", "cv", "ep", "FeOx", "FeOx-goe", "FeOx-hem", "FeOx-jar", "FeOx-MnO", "FeOx-mo", "goe", "goe-chlr", "goe-clay", "goe-clay-chlr", "goe-clay-qz", "goe-qz", "goe-qz-clay", "hem", "MnO", "MnO-FeOx", "MnO-qz", "mo", "mt", "qz", "qz-AND", "qz-ca", "qz-carb", "qz-ca-ser", "qz-chlr", "qz-chlr-ser", "qz-clay", "qz-clay-chlr", "qz-clay-goe", "qz-clay-ser", "qz-FeOx", "qz-goe", "qz-goe-clay", "qz-scor", "qz-ser", "ro", "ser", "ser-ca", "ser-qz", "ser-qz-clay", "tm", "Qz-FeOx-MnO"],
+  "Geologos_Campo": ["Daniel Duque", "Cristian Aguirre Tabares", "Alejandro Sanchez Alvarez", "Juan Manuel Madrid", "Cristian Valencia", "Luisa Huertas", "Sandra Duque", "Libertad Guzman"],
+  "Geologos_Codigo_Av": ["Daniel Duque = DD", "Cristian Aguirre Tabares = CAT", "Alejandro Sanchez Alvarez = ASA", "Juan Manuel Madrid = JMM", "Cristian Valencia = CV", "Luisa Huertas = LH", "Sandra Duque = Id_Geologist = 41 (ya ingresada en Access)"],
+  "Id_StruComp_REAL": ["CA", "Chl", "Clay", "Ox", "Qz", "QzOx", "QzSulp", "Sulp"]
+};
+var KEY="libro_roca_v1";
+
+/* ---------- estado y almacenamiento tolerante a restricciones iOS ---------- */
+var S={est:{},ord:[],pref:{}};
+var storageOk=true;
+
+function testStorage(){
+  try{
+    var k="__test_ls__";
+    localStorage.setItem(k,"1");
+    localStorage.removeItem(k);
+    return true;
+  }catch(e){ return false; }
+}
+
+function avisoAlmac(){
+  var w=g("iosWarn"); if(!w) return;
+  var t=g("iosWarnTxt");
+  if(t){
+    if(esIOS())
+      t.textContent="Este visor de iOS restringe el guardado permanente. Para no perder datos al cerrar, "+
+                    "toque Compartir y elija Abrir en Safari, o exporte el respaldo antes de cerrar.";
+    else if(esAndroid())
+      t.textContent="El navegador no esta guardando en este dispositivo (puede ser modo incognito o "+
+                    "almacenamiento de sitios bloqueado). Exporte el respaldo antes de cerrar.";
+    else
+      t.textContent="El navegador no esta guardando de forma permanente. Exporte el respaldo antes de cerrar.";
+  }
+  w.style.display="block";
+}
+
+function load(){
+  storageOk=testStorage();
+  if(!storageOk){
+    avisoAlmac();
+    return;
+  }
+  try{
+    var s=localStorage.getItem(KEY);
+    if(s){
+      var o=JSON.parse(s);
+      S.est=o.est||{}; S.ord=o.ord||[]; S.pref=o.pref||{};
+    }
+  }catch(e){}
+}
+
+var tt=null;
+function save(quiet){
+  if(storageOk){
+    try{ localStorage.setItem(KEY,JSON.stringify(S)); }
+    catch(e){
+      storageOk=false;
+      avisoAlmac();
+    }
+  }
+  if(!quiet){
+    var t=g("toast");
+    t.textContent = storageOk ? "Guardado" : "Guardado en sesión (exporte respaldo)";
+    t.classList.add("on");
+    clearTimeout(tt); tt=setTimeout(function(){t.classList.remove("on");},950);
+  }
+}
+
+function g(i){return document.getElementById(i);}
+function esc(v){return v==null?"":String(v);}
+function hoy(){var d=new Date(),p=function(v){return(v<10?"0":"")+v;};
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());}
+function num(v){ if(v===""||v==null) return null; var n=parseFloat(String(v).replace(",",".")); return isNaN(n)?null:n; }
+function r3(n){ return n==null?"":Math.round(n*1000)/1000; }
+
+/* ---------- modal HTML nativo (compatible iOS/Android) ---------- */
+var _modCb=null;
+function abrirModal(titulo, subtitulo, valorInicial, ph, cb){
+  _modCb=cb;
+  g("modTit").textContent=titulo;
+  g("modSub").textContent=subtitulo;
+  var inpEl=g("modInp");
+  inpEl.value=valorInicial||"";
+  inpEl.placeholder=ph||"";
+  g("modBox").classList.add("on");
+  setTimeout(function(){ try{ inpEl.focus(); inpEl.select(); }catch(e){} }, 120);
+}
+function cerrarModal(){
+  _modCb=null;
+  g("modBox").classList.remove("on");
+}
+g("modCancel").onclick=cerrarModal;
+g("modOk").onclick=function(){
+  var val=(g("modInp").value||"").trim().toUpperCase();
+  var cb=_modCb;
+  cerrarModal();
+  if(cb) cb(val);
+};
+g("modInp").addEventListener("keydown",function(ev){
+  if(ev.key==="Enter"){ ev.preventDefault(); g("modOk").click(); }
+});
+
+/* ---------- descarga / compartir compatible con iOS Safari y Android ---------- */
+function compartirODescargar(name, blob, mimeType){
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+              (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+
+  // En iOS, navigator.share con File permite guardar directo en Archivos o Fotos
+  if(isIOS && navigator.canShare && navigator.share){
+    try{
+      var fileObj = new File([blob], name, {type: mimeType || blob.type || "application/octet-stream"});
+      if(navigator.canShare({files:[fileObj]})){
+        navigator.share({files:[fileObj], title:name}).catch(function(){
+          fallbackDownload(name, blob);
+        });
+        return true;
+      }
+    }catch(e){}
+  }
+  return fallbackDownload(name, blob);
+}
+
+function fallbackDownload(name, blob){
+  try{
+    var u=URL.createObjectURL(blob), a=document.createElement("a");
+    a.href=u; a.download=name; a.style.display="none";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(u); }, 2500);
+    return true;
+  }catch(e){ return false; }
+}
+
+function dlBlob(name, blob){
+  return compartirODescargar(name, blob, blob.type);
+}
+function dl(name, text, mime){
+  var m=(mime||"text/csv")+";charset=utf-8";
+  return compartirODescargar(name, new Blob(["\uFEFF"+text], {type:m}), mime||"text/csv");
+}
+
+/* ---------- navegacion ---------- */
+var curE=null, curM=null;
+function openSheet(id){ g(id).classList.add("on"); document.body.style.overflow="hidden"; g(id).scrollTop=0; }
+function closeSheet(id){ g(id).classList.remove("on"); document.body.style.overflow=""; }
+
+/* ---------- constructores de campo ---------- */
+function fld(label,el,hint){
+  var w=document.createElement("div"); w.className="f";
+  var lb=document.createElement("label"); lb.textContent=label;
+  w.appendChild(lb);
+  if(hint){ var h=document.createElement("p"); h.className="hint"; h.textContent=hint; w.appendChild(h); }
+  w.appendChild(el); return w;
+}
+function inp(val,type,ph,ro){
+  var e=document.createElement("input"); e.type=type||"text"; e.value=esc(val);
+  if(ph) e.placeholder=ph;
+  if(type==="number") e.inputMode="decimal";
+  if(ro){ e.readOnly=true; e.className="ro"; }
+  e.autocomplete="off"; return e;
+}
+/* Campo numerico con rango. El valor fuera de rango NO se borra: borrarlo
+   mientras se escribe rapido hace perder el dato sin que uno se de cuenta.
+   Se deja a la vista, marcado en rojo, y el aviso sube hasta la insignia de
+   la seccion y la fila de la muestra, para que no se escape. */
+var _cap=null;
+function fldNum(etq, obj, key, min, max, after, hint){
+  var el=inp(obj[key],"number");
+  var w=fld(etq, el, hint);
+  var er=document.createElement("p");
+  er.className="hint";
+  er.style.cssText="color:var(--warn);font-weight:700;margin:5px 0 0;display:none";
+  w.appendChild(er);
+  var limpio=etq.replace(" *","");
+  function marcar(txt){
+    er.textContent=txt; er.style.display="block";
+    el.style.borderColor="var(--warn)"; el.style.background="#FFF9F7";
+  }
+  function soltar(){
+    er.style.display="none"; el.style.borderColor=""; el.style.background="";
+  }
+  function malo(){
+    var s=String(obj[key]==null?"":obj[key]).trim();
+    if(s==="") return "";
+    var v=num(s);
+    if(v===null) return limpio+": «"+s+"» no es un número.";
+    if(v<min || v>max) return "NÚMERO ERRÓNEO · "+limpio+" va de "+min+" a "+max+", y dice "+s+".";
+    return "";
+  }
+  function pintar(){
+    var e2=malo();
+    if(e2) marcar(e2); else soltar();
+  }
+  if(_cap) _cap.push(function(){ return malo()===""; });
+  var tm=null;
+  function guardar(rapido){
+    obj[key]=el.value;
+    pintar();
+    if(rapido){ clearTimeout(tm); tm=setTimeout(function(){ save(true); },300); }
+    else save();
+    if(after) after();
+  }
+  el.addEventListener("input",function(){ guardar(true); });
+  el.addEventListener("change",function(){ guardar(false); });
+  el.addEventListener("blur",function(){ guardar(false); });
+  pintar();
+  return w;
+}
+
+function ta(val,ph){ var e=document.createElement("textarea"); e.value=esc(val); if(ph) e.placeholder=ph; return e; }
+
+var _pk=null;
+function abrirPick(titulo, lista, actual, cb){
+  _pk={lista:lista, actual:actual, cb:cb};
+  g("pName").textContent=titulo;
+  g("pQ").value="";
+  pintarPick();
+  g("pMeta").textContent=lista.length+" opciones · toque una para elegir";
+  g("shPick").classList.add("on");
+  document.body.style.overflow="hidden";
+  g("shPick").scrollTop=0;
+  setTimeout(function(){ try{ g("pQ").focus(); }catch(e){} },120);
+}
+function pintarPick(){
+  if(!_pk) return;
+  var q=(g("pQ").value||"").trim().toLowerCase();
+  var h=g("pBody"); h.innerHTML="";
+  var lim=document.createElement("button"); lim.type="button";
+  lim.className="op lim"; lim.textContent="— dejar vacío —";
+  lim.onclick=function(){ elegir(""); };
+  h.appendChild(lim);
+  var n=0;
+  for(var i=0;i<_pk.lista.length;i++){
+    var v=String(_pk.lista[i]);
+    if(q && v.toLowerCase().indexOf(q)<0) continue;
+    var b=document.createElement("button"); b.type="button";
+    b.className="op"+(v===_pk.actual?" sel":"");
+    b.textContent=v;
+    b.onclick=(function(vv){ return function(){ elegir(vv); };})(v);
+    h.appendChild(b); n++;
+  }
+  if(!n){ var e2=document.createElement("div"); e2.className="empty";
+    e2.textContent="Ninguna opción coincide con «"+q+"»."; h.appendChild(e2); }
+  g("pMeta").textContent=n+" de "+_pk.lista.length+" opciones";
+}
+function elegir(v){
+  var cb=_pk?_pk.cb:null;
+  cerrarPick();
+  if(cb) cb(v);
+}
+function cerrarPick(){
+  _pk=null;
+  g("shPick").classList.remove("on");
+  document.body.style.overflow="hidden";
+}
+
+function campoPick(obj,key,list,titulo,after){
+  var b=document.createElement("button");
+  b.type="button"; b.className="pick";
+  var s=document.createElement("span");
+  b.appendChild(s);
+  function pinta(){
+    var v=obj[key];
+    s.textContent = v ? v : "— elegir —";
+    b.className = "pick"+(v?"":" vacio");
+  }
+  b.onclick=function(){
+    var lst = (typeof list==="function") ? list() : list;
+    abrirPick(titulo,lst,obj[key]||"",function(v){
+      obj[key]=v; save(); pinta(); if(after) after(v);
+    });
+  };
+  pinta();
+  return b;
+}
+
+function sel(val,list,blank){
+  var e=document.createElement("select");
+  var o=document.createElement("option"); o.value=""; o.textContent=blank||"— sin dato —"; e.appendChild(o);
+  for(var i=0;i<list.length;i++){ var p=document.createElement("option");
+    p.value=list[i]; p.textContent=list[i]; e.appendChild(p); }
+  e.value=esc(val); return e;
+}
+function bind(el,obj,key,after){
+  var t=null;
+  el.addEventListener("input",function(){ obj[key]=el.value;
+    clearTimeout(t); t=setTimeout(function(){save(true);},300); if(after) after(); });
+  el.addEventListener("change",function(){ obj[key]=el.value; save(); if(after) after(); });
+  el.addEventListener("blur",function(){ obj[key]=el.value; save(); });
+  return el;
+}
+
+/* ---------- listas ---------- */
+function LK(frag){ for(var k in L){ if(L.hasOwnProperty(k) && k.indexOf(frag)===0) return L[k]; } return []; }
+var LST={
+  area:LK("Id_Area_REAL"), geol:LK("Geologos_Campo"), aux:LK("Auxiliares"),
+  collar:LK("Id_Collar_Type_REAL"), support:LK("Id_Support_Type_REAL"),
+  sclass:LK("Id_Sample_Type_REAL"), ctrl:LK("Id_Control_Type_REAL"),
+  dup:LK("Id_Duplicate_Type_REAL"), std:LK("Id_Standard_Code_REAL"),
+  litho:LK("Id_Litho_REAL"), altT:LK("Alt_Type_Cod"), altM:LK("Alt_Min_Cod"),
+  altS:LK("Alt_Style_Cod"), inten:LK("Int_Cod"), minT:LK("Id_Mineraliz_Type_REAL"),
+  sulf:LK("Mineraliz_Cod"), other:LK("Id_Mineraliz_OtherMin_REAL"),
+  strT:LK("Id_Structure_Type_REAL"), strC:LK("Id_StruComp_REAL"),
+  target:LK("TargetCodigo"), aflo:LK("TipoAfloramiento")
+};
+
+/* ---------- validaciones geologicas y QA/QC ---------- */
+/* En la base todos los codigos son de 10 digitos, sin una sola excepcion:
+   los 340 de roca y los 67 de control. Un codigo mas corto o con letras
+   rompe el enlace con Sample y deja la fila huerfana. */
+var LARGO_SAMP=10;
+function sampMal(samp){
+  var s=String(samp==null?"":samp).trim();
+  if(s==="") return "Falta el código de muestra (Samp_id).";
+  if(!/^[0-9]+$/.test(s)) return "El código solo lleva números: «"+s+"» no sirve.";
+  if(s.length<LARGO_SAMP) return "Faltan "+(LARGO_SAMP-s.length)+" dígito(s): el código es de "+LARGO_SAMP+".";
+  if(s.length>LARGO_SAMP) return "Sobran "+(s.length-LARGO_SAMP)+" dígito(s): el código es de "+LARGO_SAMP+".";
+  return "";
+}
+
+function contarSamp(samp){
+  var s=String(samp||"").trim().toUpperCase();
+  if(!s) return 0;
+  var c=0;
+  S.ord.forEach(function(k){
+    var e=S.est[k]; if(!e) return;
+    (e.mx||[]).forEach(function(m){
+      if(String(m.samp||"").trim().toUpperCase()===s) c++;
+    });
+  });
+  return c;
+}
+
+function anteriorRoca(e, idx){
+  var l=e.mx||[];
+  for(var k=idx-1;k>=0;k--){
+    if(!esCtrl(l[k])) return l[k];
+  }
+  return null;
+}
+
+function validarMx(e, m, idx){
+  var errs=[], warns=[];
+  var s=String(m.samp||"").trim();
+  var em=sampMal(s);
+  if(em) errs.push(em);
+  else if(contarSamp(s)>1) errs.push("Código de muestra «"+s+"» está duplicado en la libreta.");
+
+  if(esCtrl(m)){
+    if(!m.ctrl) errs.push("Seleccione el tipo de control (BKF, BKG, DUP o STD).");
+    if(m.ctrl==="STD" && !m.std) errs.push("Seleccione el código de estándar.");
+    if(m.ctrl==="DUP"){
+      if(!m.dupt) errs.push("Seleccione el subtipo de duplicado.");
+      if(!String(m.ori||"").trim()) warns.push("Falta indicar la muestra original del duplicado.");
+    }
+    return {errs:errs, warns:warns, ok:errs.length===0};
+  }
+
+  var f=num(m.from), t=num(m.to);
+  if(f==null) errs.push("Falta intervalo Desde (m).");
+  if(t==null) errs.push("Falta intervalo Hasta (m).");
+  if(f!=null && f<0) errs.push("Desde (m) no puede ser negativo.");
+  if(f!=null && t!=null && t<=f) errs.push("Hasta ("+t+" m) debe ser mayor que Desde ("+f+" m).");
+  if(!m.sup) errs.push("Falta tipo de muestreo.");
+  if(!m.cls) errs.push("Falta clase de muestra.");
+
+  var prev=anteriorRoca(e, idx);
+  if(prev && f!=null){
+    var pt=num(prev.to);
+    if(pt!=null){
+      var diff=Math.round((f-pt)*1000)/1000;
+      if(diff<0) errs.push("Traslape con muestra anterior ("+prev.samp+" termina en "+pt+" m).");
+      else if(diff>0) warns.push("Salto de "+diff+" m respecto a la muestra anterior ("+prev.samp+" terminó en "+pt+" m).");
+    }
+  }
+
+  (m.st||[]).forEach(function(st, k){
+    var sf=num(st.from), sto=num(st.to), saz=num(st.az), sdip=num(st.dip);
+    if(sf!=null && sto!=null && sto<=sf) errs.push("Estructura "+(k+1)+": Hasta debe ser mayor que Desde.");
+    if(f!=null && t!=null && sf!=null && sto!=null && (sf<f || sto>t))
+      warns.push("Estructura "+(k+1)+" ("+sf+"–"+sto+" m) sale del tramo de la muestra ("+f+"–"+t+" m).");
+    if(saz!=null && (saz<0 || saz>360)) errs.push("NÚMERO ERRÓNEO: estructura "+(k+1)+", azimut "+st.az+" (va de 0 a 360).");
+    if(sdip!=null && (sdip<-90 || sdip>90)) errs.push("NÚMERO ERRÓNEO: estructura "+(k+1)+", dip "+st.dip+" (va de -90 a 90).");
+    var sesp=num(st.e);
+    if(sesp!=null && (sesp<0 || sesp>10000)) errs.push("NÚMERO ERRÓNEO: estructura "+(k+1)+", espesor "+st.e+" cm.");
+  });
+
+  var pcts=[["Venillas",m.pv],["Limonita",m.pl],["Jarosita",m.pj],["Hematita",m.ph],["Goetita",m.pg],["Manganeso",m.pm]];
+  var sumOx=0;
+  pcts.forEach(function(p){
+    var v=num(p[1]);
+    if(v!=null){
+      if(v<0 || v>100) errs.push("NÚMERO ERRÓNEO: % "+p[0]+" dice "+p[1]+", va de 0 a 100.");
+      if(p[0]!=="Venillas") sumOx+=v;
+    }
+  });
+  if(sumOx>100) warns.push("La suma de óxidos ("+Math.round(sumOx)+"%) supera el 100%.");
+  [["Canal largo",m.cl],["Canal ancho",m.ca],["Canal prof.",m.cp]].forEach(function(p){
+    var v=num(p[1]);
+    if(v!=null && (v<0 || v>1000)) errs.push("NÚMERO ERRÓNEO: "+p[0]+" dice "+p[1]+", va de 0 a 1000 m.");
+  });
+
+  return {errs:errs, warns:warns, ok:errs.length===0};
+}
+
+function validarEst(e){
+  var warns=[];
+  var az=num(e.az), dip=num(e.dip), z=num(e.z);
+  if(az!=null && (az<0 || az>360)) warns.push("NÚMERO ERRÓNEO: azimut de estación "+e.az+", va de 0 a 360.");
+  if(dip!=null && (dip<-90 || dip>90)) warns.push("NÚMERO ERRÓNEO: dip de estación "+e.dip+", va de -90 a 90.");
+  if(z!=null && (z<0 || z>6000)) warns.push("NÚMERO ERRÓNEO: elevación "+e.z+", va de 0 a 6000 m.");
+  return warns;
+}
+
+function mxOk(m){
+  if(sampMal(m.samp) || contarSamp(m.samp)>1) return false;
+  if(esCtrl(m)){
+    if(!m.ctrl) return false;
+    if(m.ctrl==="STD") return !!m.std;
+    if(m.ctrl==="DUP") return !!m.dupt;
+    return true;
+  }
+  var f=num(m.from), t=num(m.to);
+  return f!=null && t!=null && t>f && !!m.sup && !!m.cls;
+}
+
+/* ---------- lista principal ---------- */
+function totals(){ var ne=S.ord.length,nm=0;
+  for(var i=0;i<S.ord.length;i++){ var e=S.est[S.ord[i]]; if(e) nm+=(e.mx||[]).length; }
+  return [ne,nm]; }
+function drawHead(){ var t=totals(); g("hs").textContent=t[0]+" est · "+t[1]+" mx"; }
+function drawList(){
+  var m=g("list"); m.innerHTML="";
+  var q=(g("q").value||"").trim().toUpperCase(), n=0;
+  for(var i=S.ord.length-1;i>=0;i--){
+    var id=S.ord[i], e=S.est[id]; if(!e) continue;
+    var hit = !q || id.toUpperCase().indexOf(q)>=0 || String(e.area||"").toUpperCase().indexOf(q)>=0;
+    if(!hit && e.mx) for(var j=0;j<e.mx.length;j++)
+      if(String(e.mx[j].samp||"").toUpperCase().indexOf(q)>=0){ hit=true; break; }
+    if(!hit) continue;
+    var nm=(e.mx||[]).length;
+    var b=document.createElement("button"); b.type="button"; b.className="row";
+    b.innerHTML='<span class="who"><b>'+id+'</b><span>'+
+      (e.area||"—")+" · "+(e.fecha||"—")+" · "+(e.geol||"—")+'</span></span>'+
+      '<span class="cnt'+(nm?"":" z")+'">'+nm+' mx</span>';
+    b.onclick=(function(k){return function(){ openEst(k); };})(id);
+    m.appendChild(b); n++;
+  }
+  if(!n){ var d=document.createElement("div"); d.className="empty";
+    d.textContent = S.ord.length? "Nada con ese texto." : "Sin estaciones todavía. Toque «+ Estación».";
+    m.appendChild(d); }
+  drawHead();
+}
+
+/* ---------- estacion ---------- */
+g("bNew").onclick=function(){
+  abrirModal("Nueva estación", "Código de estación (Holeid), p. ej. HA-001, TOM-052", "", "Ej. HA-001", function(id){
+    if(!id) return;
+    if(S.est[id]){ alert("Esa estación ya existe."); openEst(id); return; }
+    S.est[id]={area:S.pref.area||"",geol:S.pref.geol||"",collar:S.pref.collar||"Channel",
+               fecha:hoy(),x:"",y:"",z:"",obs:"",az:"",dip:"",pref:"",mx:[]};
+    S.ord.push(id); save(); drawList(); openEst(id);
+  });
+};
+function depth(e){ var d=0; (e.mx||[]).forEach(function(m){ var t=num(m.to); if(t!=null&&t>d)d=t; }); return d; }
+
+/* El GPS del telefono entrega WGS84 en grados. La hoja Collar guarda
+   MAGNA-SIRGAS / Origen Bogota (EPSG 3116) en metros, que es la convencion
+   del proyecto. Si se escriben los grados en Este y Norte, la coordenada
+   entra corrupta a la base. Aqui se convierte antes de guardar.
+   Transversa de Mercator: lat0 4°35'46,3215" N, lon0 74°04'39,0285" W,
+   k0 = 1, falso este y falso norte 1.000.000 m, elipsoide GRS80.
+   Verificado contra pyproj: coincide al centimetro. */
+function wgs84ABogota(latDeg, lonDeg){
+  var a=6378137.0, f=1/298.257222101, e2=f*(2-f), ep2=e2/(1-e2);
+  var k0=1.0, FE=1000000.0, FN=1000000.0;
+  var lat0=4.596200416666666*Math.PI/180, lon0=-74.07750791666666*Math.PI/180;
+  var lat=latDeg*Math.PI/180, lon=lonDeg*Math.PI/180;
+  function M(p){ return a*((1-e2/4-3*e2*e2/64-5*e2*e2*e2/256)*p
+    -(3*e2/8+3*e2*e2/32+45*e2*e2*e2/1024)*Math.sin(2*p)
+    +(15*e2*e2/256+45*e2*e2*e2/1024)*Math.sin(4*p)
+    -(35*e2*e2*e2/3072)*Math.sin(6*p)); }
+  var N=a/Math.sqrt(1-e2*Math.sin(lat)*Math.sin(lat));
+  var T=Math.tan(lat)*Math.tan(lat), C=ep2*Math.cos(lat)*Math.cos(lat);
+  var A=(lon-lon0)*Math.cos(lat);
+  var E=FE+k0*N*(A+(1-T+C)*Math.pow(A,3)/6+(5-18*T+T*T+72*C-58*ep2)*Math.pow(A,5)/120);
+  var Nn=FN+k0*(M(lat)-M(lat0)+N*Math.tan(lat)*(A*A/2+(5-T+9*C+4*C*C)*Math.pow(A,4)/24
+        +(61-58*T+T*T+600*C-330*ep2)*Math.pow(A,6)/720));
+  return [Math.round(E*100)/100, Math.round(Nn*100)/100];
+}
+
+/* Una coordenada de Origen Bogota en esta zona anda por 850.000 E y 1.225.000 N.
+   Un par de grados es -75,4 y 6,6. No hay forma de confundirlos. */
+function pareceGrados(x,y){
+  var nx=num(x), ny=num(y);
+  if(nx==null||ny==null) return false;
+  return Math.abs(nx)>0.5 && Math.abs(nx)<=180 && Math.abs(ny)<=90;
+}
+
+/* Arrastre de la version anterior: el GPS guardaba grados en Este y Norte.
+   Esto las pasa a Origen Bogota y deja constancia en las observaciones. */
+function migrarCoords(aplicar){
+  var n=0;
+  S.ord.forEach(function(k){
+    var e=S.est[k]; if(!e) return;
+    if(!pareceGrados(e.x,e.y)) return;
+    n++;
+    if(!aplicar) return;
+    var lat=num(e.y), lon=num(e.x);
+    var mg=wgs84ABogota(lat,lon);
+    e.obs=(e.obs?e.obs+" | ":"")+"Coordenada convertida de WGS84 ("+lat+", "+lon+") a Origen Bogota.";
+    e.x=String(mg[0]); e.y=String(mg[1]);
+  });
+  if(aplicar && n){ save(); drawList(); }
+  return n;
+}
+function revisarGrados(){
+  var n=migrarCoords(false);
+  var w=g("gradWarn");
+  if(!w) return;
+  if(n){ g("gradN").textContent=n; w.style.display="block"; }
+  else w.style.display="none";
+}
+
+/* ---------- diagnostico real del GPS, por plataforma ---------- */
+function esAndroid(){ return /Android/i.test(navigator.userAgent||""); }
+function esIOS(){
+  var u=navigator.userAgent||"";
+  return /iPad|iPhone|iPod/.test(u) || (/Macintosh/.test(u) && (navigator.maxTouchPoints||0)>1);
+}
+function archivoLocal(){ return location.protocol==="file:" || location.protocol==="content:"; }
+function origenSeguro(){
+  if(typeof isSecureContext!=="undefined") return !!isSecureContext;
+  return location.protocol==="https:" || location.hostname==="localhost";
+}
+function rutaPermisos(){
+  if(esAndroid()) return "En Chrome: menu ⋮ → Configuracion → Configuracion de sitios → Ubicacion. "+
+                         "Y en el telefono: Ajustes → Ubicacion, activada y en modo Alta precision.";
+  if(esIOS())     return "En el telefono: Ajustes → Privacidad y seguridad → Localizacion → "+
+                         "el navegador que use, en \"Al usar la app\", con Ubicacion exacta activada.";
+  return "Revise los permisos de ubicacion del navegador y del sistema operativo.";
+}
+/* El codigo 1 del navegador significa "permiso denegado", pero tambien lo devuelve
+   cuando el bloqueo es por el ORIGEN de la pagina (archivo local en vez de https).
+   Son causas distintas con el mismo codigo, asi que hay que separarlas con el
+   estado real del permiso y con el texto del mensaje. */
+function diagGPS(err, cb){
+  var msg=String((err&&err.message)||"");
+  var cod=err?err.code:0;
+  var porOrigen=/secure origin|secure context|insecure|Y0ZkNV/i.test(msg);
+  var pie="\n\n— Detalle tecnico: codigo "+cod+", origen "+location.protocol+
+          ", mensaje: "+(msg||"(vacio)");
+
+  function arma(estado){
+    var pieEst=pie+(estado?", permiso: "+estado:"");
+    /* Bloqueo por el ORIGEN de la pagina. Un archivo abierto como content:// o file://
+       no tiene host, asi que no hay origen al cual asignarle el permiso: el navegador
+       lo reporta como "denied" de forma permanente y no aparece en ninguna pantalla de
+       ajustes. Por eso aqui "denied" NO significa que el usuario haya negado nada. */
+    if(porOrigen || (cod===1 && archivoLocal())){
+      return "EL GPS NO ESTA DISPONIBLE POR LA FORMA EN QUE SE ABRIO LA LIBRETA ("+
+             location.protocol+"), NO POR LOS PERMISOS.\n\n"+
+             "Un archivo abierto asi no tiene direccion web, y el navegador solo concede "+
+             "ubicacion a una direccion. Sin direccion no hay a quien darle el permiso, "+
+             "entonces lo reporta como denegado para siempre.\n\n"+
+             "NO busque nada en los ajustes: esta libreta no aparece en la lista de sitios "+
+             "y no hay casilla que activar. Aunque el telefono y Chrome esten perfectos, "+
+             "el resultado es el mismo.\n\n"+
+             "Unica solucion: abrir la libreta desde una direccion https. Mientras tanto, "+
+             "digite Este y Norte a mano, o lealos en Avenza configurado en "+
+             "MAGNA-SIRGAS / Origen Bogota."+pieEst;
+    }
+    if(cod===1){
+      return "Permiso de ubicacion denegado por el navegador o el sistema.\n\n"+
+             rutaPermisos()+pieEst;
+    }
+    if(cod===2) return "El telefono no logro fijar posicion (sin senal de satelites o ubicacion "+
+                       "desactivada).\n\nSalga a cielo abierto, confirme que la Ubicacion del "+
+                       "telefono esta encendida y reintente."+pieEst;
+    if(cod===3) return "Se agotaron los 25 segundos de espera sin fijar posicion.\n\n"+
+                       "Normal en arranque en frio o bajo dosel cerrado: espere a cielo abierto "+
+                       "y reintente."+pieEst;
+    return "No se pudo obtener GPS."+pieEst;
+  }
+
+  /* El estado del permiso es el discriminador: si el navegador dice que el permiso
+     NO esta denegado y aun asi falla con codigo 1, el bloqueo es por el origen. */
+  if(navigator.permissions && navigator.permissions.query){
+    try{
+      navigator.permissions.query({name:"geolocation"}).then(
+        function(r){ cb(arma(r&&r.state)); },
+        function(){ cb(arma("")); }
+      );
+      return;
+    }catch(ex){}
+  }
+  cb(arma(""));
+}
+
+function capturarGPS(e, elX, elY, elZ, btn){
+  if(!navigator.geolocation){ alert("Este navegador no soporta GPS."); return; }
+  btn.disabled=true; btn.textContent="Obteniendo señal GPS…";
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat=Math.round(pos.coords.latitude*1000000)/1000000;
+    var lon=Math.round(pos.coords.longitude*1000000)/1000000;
+    var alt=pos.coords.altitude!=null ? Math.round(pos.coords.altitude*10)/10 : null;
+    var acc=Math.round(pos.coords.accuracy||0);
+    var mg=wgs84ABogota(lat,lon);                 // a MAGNA-SIRGAS Origen Bogota
+    if((!e.x && !e.y) || pareceGrados(e.x,e.y)){
+      e.x=String(mg[0]); e.y=String(mg[1]);
+      elX.value=e.x; elY.value=e.y;
+      revisarGrados();
+    }
+    /* La cota NO se llena desde el GPS: el telefono da altura elipsoidal, que
+       en Antioquia esta unos 20 m por encima de la cota del DEM. Queda en la
+       observacion para referencia y la cota real se saca del DEM en oficina. */
+    var notaGps="GPS WGS84: "+lat+", "+lon+(alt!=null?" (altura elipsoidal "+alt+" m)":"")+
+                " ±"+acc+" m";
+    if((e.obs||"").indexOf("GPS WGS84:")<0){
+      e.obs=(e.obs?e.obs+" | ":"")+notaGps;
+    }
+    save();
+    btn.disabled=false;
+    btn.textContent="✓ GPS capturado (±"+acc+" m) · Bogotá "+mg[0]+" / "+mg[1];
+  }, function(err){
+    btn.disabled=false;
+    btn.textContent="Capturar GPS del teléfono";
+    diagGPS(err, function(txt){ alert(txt); });
+  }, {enableHighAccuracy:true, timeout:25000, maximumAge:0});
+}
+
+function openEst(id){
+  curE=id; var e=S.est[id];
+  g("eName").textContent=id;
+  g("eMeta").textContent=(e.area||"—")+" · prof. "+r3(depth(e))+" m";
+  var b=g("eBody"); b.innerHTML="";
+
+  var d=document.createElement("details"); d.open=!(e.mx&&e.mx.length);
+  function badgeE(){
+    var ok=!!(e.area&&e.geol&&e.collar&&e.az!==""&&e.dip!=="");
+    var w=validarEst(e);
+    var mal=(d._cap||[]).some(function(f){ return !f(); });
+    d.firstChild.innerHTML='Datos de la estación <i class="'+((w.length||mal)?"w":(ok?"":"e"))+'">'+
+      ((w.length||mal)?"revisar":(ok?"ok":"falta"))+'</i>';
+  }
+  d.innerHTML='<summary></summary>';
+  var bd=document.createElement("div"); bd.className="dbody";
+  _cap=[];
+  var hc=document.createElement("p"); hc.className="hint";
+  hc.textContent="Este y Norte van en MAGNA-SIRGAS Origen Bogotá, en metros. "+
+    "El botón de GPS convierte solo la lectura del teléfono a ese sistema; la cota se saca del DEM en oficina.";
+  bd.appendChild(hc);
+  var two=document.createElement("div"); two.className="two";
+  var elX=inp(e.x,"number"), elY=inp(e.y,"number"), elZ=inp(e.z,"number");
+  /* elZ queda solo para que capturarGPS lo pueda referenciar; el campo real
+     lo arma fldNum mas abajo con su rango. */
+  two.appendChild(fld("Este (X)",bind(elX,e,"x",function(){meta();})));
+  two.appendChild(fld("Norte (Y)",bind(elY,e,"y")));
+  bd.appendChild(two);
+  var two2=document.createElement("div"); two2.className="two";
+  two2.appendChild(fldNum("Elevación (Z)",e,"z",0,6000,null));
+  two2.appendChild(fld("Fecha *",bind(inp(e.fecha,"date"),e,"fecha")));
+  bd.appendChild(two2);
+
+  var bgps=document.createElement("button"); bgps.type="button"; bgps.className="gpsbtn";
+  bgps.textContent="Capturar GPS del teléfono";
+  bgps.onclick=function(){ capturarGPS(e, elX, elY, elZ, bgps); };
+  bd.appendChild(bgps);
+
+  bd.appendChild(fld("Área / Campaña *",bind(sel(e.area,LST.area),e,"area",function(){S.pref.area=e.area;save(true);meta();badgeE();})));
+  bd.appendChild(fld("Geólogo *",bind(sel(e.geol,LST.geol),e,"geol",function(){S.pref.geol=e.geol;save(true);badgeE();})));
+  bd.appendChild(fld("Tipo de collar *",bind(sel(e.collar,LST.collar),e,"collar",function(){S.pref.collar=e.collar;save(true);badgeE();})));
+  var tz=document.createElement("div"); tz.className="two";
+  tz.appendChild(fldNum("Azimut del canal *",e,"az",0,360,badgeE));
+  tz.appendChild(fldNum("Dip del canal *",e,"dip",-90,90,badgeE));
+  bd.appendChild(tz);
+  var hz=document.createElement("p"); hz.className="hint";
+  hz.textContent="Se digita una sola vez: vale para todas las muestras de esta estación.";
+  bd.appendChild(hz);
+
+  bd.appendChild(fld("Frase inicial del comentario",
+    bind(inp(e.pref,"text","p. ej. Tunel PL El Silencio."),e,"pref"),
+    "Encabeza el comentario de todas las muestras. Lo que escriba en cada muestra se agrega después."));
+
+  bd.appendChild(fld("Observaciones de la estación",bind(ta(e.obs),e,"obs")));
+
+  d._cap=_cap; _cap=null;
+  d.appendChild(bd); b.appendChild(d); badgeE();
+
+  var h=document.createElement("div"); h.className="grp"; h.textContent="Muestras"; b.appendChild(h);
+  var add=document.createElement("button"); add.type="button"; add.className="add"; add.textContent="+ Agregar muestra";
+  add.onclick=function(){ newMx(id, false); }; b.appendChild(add);
+
+  (e.mx||[]).forEach(function(m,i){
+    var r=document.createElement("button"); r.type="button"; r.className="row";
+    var lar=largo(m);
+    var val=validarMx(e, m, i);
+    var tagTxt = val.errs.length ? "error" : (val.warns.length ? "aviso" : "ok");
+    var tagCls = val.errs.length ? " z" : "";
+    r.innerHTML='<span class="who"><b>'+(m.samp||"(sin código)")+'</b><span>'+
+      (esCtrl(m) ? ("control "+(m.ctrl||"sin tipo")+(m.std?" "+m.std:(m.ori?" de "+m.ori:"")))
+              : (r3(num(m.from))+" – "+r3(num(m.to))+" m · "+(lar==null?"—":r3(lar)+" m")+
+                 (m.lit?" · "+m.lit:"")+(m.sup?" · "+m.sup:"")))+'</span></span>'+
+      '<span class="cnt'+tagCls+'">'+tagTxt+'</span>';
+    r.onclick=function(){ openMx(id,i); }; b.appendChild(r);
+  });
+  var acc=document.createElement("div"); acc.className="two"; acc.style.marginTop="6px";
+
+  var ren=document.createElement("button"); ren.type="button"; ren.className="opt"; ren.style.padding="14px"; ren.textContent="Cambiar código";
+  ren.onclick=function(){
+    abrirModal("Cambiar código", "Las "+(e.mx||[]).length+" muestras se moverán al nuevo código.", id, "Nuevo código", function(nue){
+      if(!nue || nue===id) return;
+      if(S.est[nue]){ alert("Ya existe una estación con ese código."); return; }
+      S.est[nue]=e; delete S.est[id];
+      S.ord=S.ord.map(function(k){ return k===id?nue:k; });
+      save(); closeSheet("shEst"); drawList(); openEst(nue);
+    });
+  };
+  acc.appendChild(ren);
+
+  var del=document.createElement("button"); del.type="button"; del.className="del"; del.style.padding="14px"; del.textContent="Eliminar estación";
+  del.onclick=function(){ if(!confirm("¿Eliminar "+id+" y sus "+(e.mx||[]).length+" muestras?\nNo se puede deshacer.")) return;
+    delete S.est[id]; S.ord=S.ord.filter(function(k){return k!==id;}); save();
+    closeSheet("shEst"); drawList(); };
+  acc.appendChild(del);
+  b.appendChild(acc);
+
+  function meta(){ g("eMeta").textContent=(e.area||"—")+" · prof. "+r3(depth(e))+" m"; }
+  openSheet("shEst");
+}
+g("cEst").onclick=function(){ closeSheet("shEst"); drawList(); };
+
+function largo(m){ var a=num(m.from), b=num(m.to); return (a==null||b==null)?null:Math.round((b-a)*1000)/1000; }
+function esCtrl(m){ return m.cls==="Control"; }
+
+function sigSamp(){
+  var mejor=null, largo=0;
+  S.ord.forEach(function(k){ var e=S.est[k]; if(!e) return;
+    (e.mx||[]).forEach(function(m){
+      var v=String(m.samp==null?"":m.samp).trim();
+      if(!/^[0-9]{1,15}$/.test(v)) return;
+      var n=parseFloat(v);
+      if(mejor===null||n>mejor){ mejor=n; largo=v.length; }
+    });
+  });
+  if(mejor===null) return "10111";
+  var s=String(mejor+1);
+  while(s.length<largo) s="0"+s;
+  return s;
+}
+
+function sigFrom(e,pos){
+  var l=e.mx||[];
+  for(var k=Math.min(pos,l.length)-1;k>=0;k--){
+    if(esCtrl(l[k])) continue;
+    var v=String(l[k].to==null?"":l[k].to).trim();
+    if(v!=="") return esc(l[k].to);
+  }
+  return "0";
+}
+
+function clonarDatosGeo(src, dst){
+  if(!src) return;
+  var campos=["sup","lit","asec","at","am","ast","ai","ac","mt","ms","mo","mi","mc",
+              "tgt","afl","ref","tit","pv","pl","pj","ph","pg","pm","cl","ca","cp","comp","tex"];
+  campos.forEach(function(c){ dst[c]=src[c]||""; });
+}
+
+function newMx(id, clonarAnterior){
+  var e=S.est[id];
+  if(!e.mx) e.mx=[];
+  var pos=e.mx.length;
+  var m={samp:sigSamp(),from: sigFrom(e,pos), to:"", sup:S.pref.sup||"Channel",
+         cls:"Rock", ctrl:"", dupt:"", ori:"", dupde:"", std:"", aux:S.pref.aux||"", com:"",
+         az:"", dip:"",
+         lit:"",
+         asec:"1", at:"", am:"", ast:"", ai:"", ac:"",
+         mt:"", ms:"", mo:"", mi:"", mc:"",
+         st:[],
+         tgt:S.pref.tgt||"", afl:S.pref.afl||"", ref:S.pref.ref||"", tit:S.pref.tit||"",
+         pv:"", pl:"", pj:"", ph:"", pg:"", pm:"",
+         cl:"", ca:"", cp:"", comp:"", tex:""};
+  if(clonarAnterior){
+    var ant=anteriorRoca(e, pos);
+    if(ant) clonarDatosGeo(ant, m);
+  }
+  e.mx.push(m); save();
+  openMx(id, e.mx.length-1);
+}
+
+function aplicarReglasQAQC(m){
+  var up=String(m.samp||"").trim().toUpperCase();
+  if(up.indexOf("BKF")===0){
+    m.cls="Control"; m.ctrl="BKF"; m.sup="N/A"; m.from=""; m.to=""; m.st=[];
+    if(!m.std) m.std="BL_10";
+  } else if(up.indexOf("BKG")===0){
+    m.cls="Control"; m.ctrl="BKG"; m.sup="N/A"; m.from=""; m.to=""; m.st=[];
+    if(!m.std) m.std="CBLK_Qz2mm";
+  }
+}
+
+function listaMuestrasLibreta(excluirSamp){
+  var out=[];
+  S.ord.forEach(function(k){
+    var est=S.est[k]; if(!est) return;
+    (est.mx||[]).forEach(function(mx){
+      if(!esCtrl(mx) && mx.samp && mx.samp!==excluirSamp){
+        out.push(mx.samp+" ("+k+": "+r3(num(mx.from))+"–"+r3(num(mx.to))+"m)");
+      }
+    });
+  });
+  return out;
+}
+
+function buscarMuestraPorCodigo(cod){
+  var c=String(cod||"").split(" ")[0].trim();
+  for(var i=0;i<S.ord.length;i++){
+    var est=S.est[S.ord[i]]; if(!est) continue;
+    for(var j=0;j<(est.mx||[]).length;j++){
+      if(est.mx[j].samp===c) return est.mx[j];
+    }
+  }
+  return null;
+}
+
+/* ---------- muestra ---------- */
+function openMx(id,i){
+  curE=id; curM=i;
+  var e=S.est[id], m=e.mx[i];
+  g("mName").textContent=m.samp||"(muestra nueva)";
+  g("mMeta").textContent=id+" ("+(i+1)+"/"+e.mx.length+") · "+(e.area||"—");
+
+  g("mPrev").disabled = (i<=0);
+  g("mNext").disabled = (i>=e.mx.length-1);
+  g("mPrev").onclick = function(){ if(i>0) openMx(id, i-1); };
+  g("mNext").onclick = function(){ if(i<e.mx.length-1) openMx(id, i+1); };
+
+  var b=g("mBody"); b.innerHTML="";
+
+  var qbar=document.createElement("div"); qbar.className="qbar";
+  var bSig=document.createElement("button"); bSig.type="button"; bSig.textContent="+ Nueva muestra";
+  bSig.onclick=function(){ newMx(id, false); };
+  var bClon=document.createElement("button"); bClon.type="button"; bClon.className="oro"; bClon.textContent="⎘ Clonar esta y seguir";
+  bClon.onclick=function(){
+    if(esCtrl(m)){ newMx(id, true); return; }
+    var pos=e.mx.length;
+    var clon={samp:sigSamp(), from:sigFrom(e,pos), to:"", sup:m.sup||"Channel",
+              cls:"Rock", ctrl:"", dupt:"", ori:"", dupde:"", std:"", aux:m.aux||S.pref.aux||"", com:"",
+              az:"", dip:"", lit:"", asec:"1", at:"", am:"", ast:"", ai:"", ac:"",
+              mt:"", ms:"", mo:"", mi:"", mc:"", st:[],
+              tgt:"", afl:"", ref:"", tit:"", pv:"", pl:"", pj:"", ph:"", pg:"", pm:"",
+              cl:"", ca:"", cp:"", comp:"", tex:""};
+    clonarDatosGeo(m, clon);
+    e.mx.push(clon); save();
+    openMx(id, e.mx.length-1);
+  };
+  qbar.appendChild(bSig); qbar.appendChild(bClon);
+  b.appendChild(qbar);
+
+  var alertBox=document.createElement("div");
+  b.appendChild(alertBox);
+
+  function renderAlertas(){
+    var v=validarMx(e, m, i);
+    alertBox.innerHTML="";
+    if(v.errs.length){
+      var dErr=document.createElement("div"); dErr.className="note bad";
+      dErr.innerHTML="<b>Corregir antes de exportar:</b><br>• "+v.errs.join("<br>• ");
+      alertBox.appendChild(dErr);
+    }
+    if(v.warns.length){
+      var dWrn=document.createElement("div"); dWrn.className="note";
+      dWrn.innerHTML="<b>Advertencia geológica:</b><br>• "+v.warns.join("<br>• ");
+      alertBox.appendChild(dWrn);
+    }
+  }
+
+  function head(){ g("mName").textContent=m.samp||"(muestra nueva)"; renderAlertas(); }
+  var secStr=null;
+  function sec(title,filled,build){
+    var d=document.createElement("details");
+    var sm=document.createElement("summary");
+    var bd=document.createElement("div"); bd.className="dbody";
+    function badge(){
+      var mal=(d._cap||[]).some(function(f){ return !f(); });
+      var ok=filled();
+      sm.innerHTML=(typeof title==="function"?title():title)+
+        ' <i class="'+(mal?"w":(ok?"":"e"))+'">'+(mal?"revisar":(ok?"ok":"vacío"))+'</i>';
+      renderAlertas();
+    }
+    function redraw(){
+      bd.innerHTML="";
+      var guarda=_cap; _cap=[];
+      build(bd,redraw,badge);
+      d._cap=_cap; _cap=guarda;
+      badge();
+    }
+    d.appendChild(sm); d.appendChild(bd); redraw(); b.appendChild(d);
+    d.refresh=redraw; d.badge=badge; return d;
+  }
+
+  /* -- muestra -- */
+  var d1=sec("Muestra", function(){return mxOk(m);}, function(bd,redraw,badge){
+    var inpSamp=inp(m.samp,"text","p. ej. 1011117582");
+    inpSamp.addEventListener("change", function(){
+      var prevCls=m.cls;
+      aplicarReglasQAQC(m);
+      if(m.cls!==prevCls){ save(); openMx(id,i); }
+    });
+    var wSamp=fld("Código de muestra * (Samp_id)",
+      bind(inpSamp,m,"samp",function(){head();badge();avisoSamp();}),
+      "Diez dígitos exactos, como en la base. Propuesto: uno más que el último de la libreta.");
+    var erSamp=document.createElement("p");
+    erSamp.className="hint";
+    erSamp.style.cssText="color:var(--warn);font-weight:700;margin:5px 0 0;display:none";
+    wSamp.appendChild(erSamp);
+    function avisoSamp(){
+      var em=sampMal(m.samp);
+      if(!em && contarSamp(m.samp)>1) em="Ese código ya está usado en la libreta.";
+      if(em){
+        erSamp.textContent=em; erSamp.style.display="block";
+        inpSamp.style.borderColor="var(--warn)"; inpSamp.style.background="#FFF9F7";
+      } else {
+        erSamp.style.display="none";
+        inpSamp.style.borderColor=""; inpSamp.style.background="";
+      }
+    }
+    inpSamp.inputMode="numeric";
+    inpSamp.addEventListener("input",avisoSamp);
+    bd.appendChild(wSamp);
+    avisoSamp();
+    var lrg;
+    if(esCtrl(m)){
+      lrg=inp("","text","",true);
+    } else {
+      var t=document.createElement("div"); t.className="three";
+      t.appendChild(fld("Desde (m) *",tramo(inp(m.from,"number"),"from")));
+      t.appendChild(fld("Hasta (m) *",tramo(inp(m.to,"number"),"to")));
+      lrg=inp(largo(m),"text","",true); t.appendChild(fld("Largo (m)",lrg));
+      bd.appendChild(t);
+    }
+    function lg(){ lrg.value=esc(r3(largo(m))); badge(); }
+    function tramo(el,key){
+      var tm=null;
+      function apply(){
+        var ant=m[key], nue=el.value;
+        if(ant===nue) return;
+        (m.st||[]).forEach(function(s){
+          if(s[key]===ant || s[key]===""||s[key]==null) s[key]=nue;
+        });
+        m[key]=nue; lg();
+        if(secStr) secStr.refresh();
+      }
+      el.addEventListener("input",function(){ apply();
+        clearTimeout(tm); tm=setTimeout(function(){save(true);},300); });
+      el.addEventListener("change",function(){ apply(); save(); });
+      el.addEventListener("blur",function(){ apply(); save(); });
+      return el;
+    }
+    if(!esCtrl(m))
+      bd.appendChild(fld("Tipo de muestreo *",bind(sel(m.sup,LST.support),m,"sup",function(){S.pref.sup=m.sup;save(true);badge();})));
+    bd.appendChild(fld("Clase de muestra *",
+      bind(sel(m.cls,LST.sclass),m,"cls",function(){
+        if(esCtrl(m)){ m.sup="N/A"; m.from=""; m.to=""; m.st=[]; }
+        else {
+          m.sup=S.pref.sup||"Channel";
+          m.ctrl=""; m.dupt=""; m.ori=""; m.dupde=""; m.std="";
+          if(String(m.from||"").trim()==="") m.from=sigFrom(e,i);
+        }
+        save(); openMx(id,i);
+      })));
+    if(esCtrl(m)){
+      bd.appendChild(fld("Tipo de control (QA/QC) *",
+        bind(sel(m.ctrl,LST.ctrl),m,"ctrl",function(){
+          if(m.ctrl!=="STD") m.std="";
+          if(m.ctrl!=="DUP"){ m.dupt=""; m.ori=""; m.dupde=""; }
+          if(m.ctrl==="BKF" && !m.std) m.std="BL_10";
+          if(m.ctrl==="BKG" && !m.std) m.std="CBLK_Qz2mm";
+          save(); openMx(id,i);
+        })));
+      if(m.ctrl==="DUP"){
+        bd.appendChild(fld("Subtipo de duplicado *",bind(sel(m.dupt,LST.dup),m,"dupt",badge)));
+        bd.appendChild(fld("Muestra original (seleccionar de libreta)",
+          campoPick(m,"ori",function(){ return listaMuestrasLibreta(m.samp); },"Muestra original",function(v){
+            var soloCod=String(v||"").split(" ")[0];
+            m.ori=soloCod;
+            var orig=buscarMuestraPorCodigo(soloCod);
+            if(orig && !m.com) m.com="Duplicado de "+soloCod;
+            save(); badge();
+          })));
+        bd.appendChild(fld("Muestra duplicada de (si aplica)",bind(inp(m.dupde),m,"dupde")));
+      }
+      if(m.ctrl==="STD" || m.ctrl==="BKF" || m.ctrl==="BKG")
+        bd.appendChild(fld("Código de estándar / blanco *",
+          campoPick(m,"std",LST.std,"Código de estándar",function(){ badge(); drawList(); })));
+    }
+    bd.appendChild(fld("Auxiliar",bind(sel(m.aux,LST.aux),m,"aux",function(){S.pref.aux=m.aux;save(true);})));
+    var vc=document.createElement("p"); vc.className="hint";
+    function verCom(){
+      var p=(e.pref||"").trim(), c=(m.com||"").trim();
+      vc.textContent = (p && !esCtrl(m)) ? ("Va a quedar:  "+(p+(c?" "+c:""))) : "";
+    }
+    bd.appendChild(fld("Comentarios",bind(ta(m.com),m,"com",verCom)));
+    bd.appendChild(vc); verCom();
+  });
+  d1.open = !mxOk(m);
+
+  if(!esCtrl(m)){
+  /* -- litologia -- */
+  sec("Litología", function(){return !!m.lit;}, function(bd,redraw,badge){
+    bd.appendChild(fld("Litología *",bind(sel(m.lit,LST.litho),m,"lit",badge)));
+    var hl=document.createElement("p"); hl.className="hint";
+    hl.textContent="El comentario es el de la muestra; en la libreta esta columna lo repite sola.";
+    bd.appendChild(hl);
+  });
+
+  /* -- alteracion -- */
+  sec("Alteración", function(){return !!m.at;}, function(bd,redraw,badge){
+    bd.appendChild(fld("Secuencia *",bind(inp(m.asec,"number"),m,"asec")));
+    bd.appendChild(fld("Tipo de alteración *",bind(sel(m.at,LST.altT),m,"at",badge)));
+    bd.appendChild(fld("Mineral de alteración",campoPick(m,"am",LST.altM,"Mineral de alteración")));
+    bd.appendChild(fld("Estilo",bind(sel(m.ast,LST.altS),m,"ast")));
+    bd.appendChild(fld("Intensidad",bind(sel(m.ai,LST.inten),m,"ai")));
+    bd.appendChild(fld("Comentarios",bind(ta(m.ac),m,"ac")));
+  });
+
+  /* -- estructuras (varias) -- */
+  secStr=sec(function(){return "Estructura ("+((m.st||[]).length)+")";},
+      function(){return (m.st||[]).length>0;}, function(bd,redraw,badge){
+    if(!m.st) m.st=[];
+    var hs=document.createElement("p"); hs.className="hint";
+    hs.textContent="Cada estructura arranca con el mismo tramo de la muestra. Cámbielo solo si la estructura ocupa una parte.";
+    bd.appendChild(hs);
+    m.st.forEach(function(s,k){
+      var w=document.createElement("div"); w.className="strc";
+      var hd=document.createElement("div"); hd.className="hd";
+      hd.innerHTML="<b>Estructura "+(k+1)+"</b>";
+      var x=document.createElement("button"); x.type="button"; x.className="del"; x.textContent="Quitar";
+      x.onclick=function(){ m.st.splice(k,1); save(); redraw(); };
+      hd.appendChild(x); w.appendChild(hd);
+      var t2=document.createElement("div"); t2.className="two";
+      t2.appendChild(fld("Desde (m) *",bind(inp(s.from===undefined?m.from:s.from,"number"),s,"from",badge)));
+      t2.appendChild(fld("Hasta (m) *",bind(inp(s.to===undefined?m.to:s.to,"number"),s,"to",badge)));
+      w.appendChild(t2);
+      w.appendChild(fld("Tipo de estructura *",bind(sel(s.t,LST.strT),s,"t")));
+      w.appendChild(fld("Composición",bind(sel(s.c,LST.strC),s,"c")));
+      var t3=document.createElement("div"); t3.className="three";
+      t3.appendChild(fldNum("Espesor (cm)",s,"e",0,10000,null));
+      t3.appendChild(fldNum("Azimut",s,"az",0,360,badge));
+      t3.appendChild(fldNum("Dip",s,"dip",-90,90,badge));
+      w.appendChild(t3);
+      bd.appendChild(w);
+    });
+    var a=document.createElement("button"); a.type="button"; a.className="add"; a.textContent="+ Agregar estructura";
+    a.onclick=function(){ m.st.push({from:m.from,to:m.to,t:"",c:"",e:"",az:"",dip:""});
+      save(); redraw(); };
+    bd.appendChild(a);
+  });
+
+  /* -- mineralizacion -- */
+  sec("Mineralización", function(){return !!(m.mt||m.ms||m.mo);}, function(bd,redraw,badge){
+    var hh=document.createElement("p"); hh.className="hint";
+    hh.textContent="La mineralización cuelga de la estructura: sin estructura logueada va N/A.";
+    bd.appendChild(hh);
+    bd.appendChild(fld("Tipo de mineralización",bind(sel(m.mt,LST.minT),m,"mt",badge)));
+    bd.appendChild(fld("Sulfuro",campoPick(m,"ms",LST.sulf,"Sulfuro",badge)));
+    bd.appendChild(fld("Otro mineral",
+      campoPick(m,"mo",LST.other,"Otro mineral",badge),
+      "76 opciones. Se abre una lista donde escribe para filtrar y toca la que va."));
+    bd.appendChild(fld("Intensidad",bind(sel(m.mi,LST.inten),m,"mi")));
+    bd.appendChild(fld("Comentarios (óxidos)",bind(ta(m.mc),m,"mc")));
+  });
+
+  /* -- complementarios -- */
+  sec("Complementarios", function(){return !!(m.tgt||m.afl||m.pv);}, function(bd,redraw,badge){
+    bd.appendChild(fld("Target",bind(sel(m.tgt,LST.target),m,"tgt",function(){S.pref.tgt=m.tgt;save(true);badge();})));
+    bd.appendChild(fld("Tipo de afloramiento",bind(sel(m.afl,LST.aflo),m,"afl",function(){S.pref.afl=m.afl;save(true);})));
+    bd.appendChild(fld("Referencia local",bind(inp(m.ref,"text","p. ej. Tunel 2 Hilo Azul"),m,"ref",function(){S.pref.ref=m.ref;save(true);})));
+    bd.appendChild(fld("Título / proyecto",bind(inp(m.tit,"text","p. ej. B7560005"),m,"tit",function(){S.pref.tit=m.tit;save(true);})));
+    var pc=document.createElement("div"); pc.className="three";
+    pc.appendChild(fldNum("% Venillas",m,"pv",0,100,badge));
+    pc.appendChild(fldNum("% Limonita",m,"pl",0,100,badge));
+    pc.appendChild(fldNum("% Jarosita",m,"pj",0,100,badge));
+    bd.appendChild(pc);
+    var pc2=document.createElement("div"); pc2.className="three";
+    pc2.appendChild(fldNum("% Hematita",m,"ph",0,100,badge));
+    pc2.appendChild(fldNum("% Goetita",m,"pg",0,100,badge));
+    pc2.appendChild(fldNum("% Manganeso",m,"pm",0,100,badge));
+    bd.appendChild(pc2);
+    var cc=document.createElement("div"); cc.className="three";
+    cc.appendChild(fldNum("Canal largo (m)",m,"cl",0,1000,null));
+    cc.appendChild(fldNum("Canal ancho (m)",m,"ca",0,1000,null));
+    cc.appendChild(fldNum("Canal prof. (m)",m,"cp",0,1000,null));
+    bd.appendChild(cc);
+    bd.appendChild(fld("Composición",bind(inp(m.comp),m,"comp")));
+    bd.appendChild(fld("Textura",bind(inp(m.tex),m,"tex")));
+  });
+
+  } else {
+    var av=document.createElement("div"); av.className="note";
+    av.innerHTML="<b>Muestra de control.</b> No lleva tramo ni descripción geológica: "+
+      "solo código, tipo de control y comentario. Va al laboratorio junto con el lote.";
+    b.appendChild(av);
+  }
+
+  /* -- foto rotulada -- */
+  sec(function(){return "Foto"+((m.nfoto||0)?" ("+m.nfoto+")":"");},
+      function(){return (m.nfoto||0)>0;}, function(bd,redraw,badge){
+    var hp=document.createElement("p"); hp.className="hint";
+    /* El nombre depende del estandar, que se puede elegir despues de haber
+       dibujado esta seccion: se recalcula cada vez que se abre. */
+    function textoAyuda(){
+      hp.textContent = esCtrl(m)
+        ? ("Se guarda como "+nombreFoto(m,id,(m.nfoto||0)+1)+", con el tipo de control "+
+           "quemado en la imagen. No entra a la base de datos ni al respaldo.")
+        : ("Se guarda a resolución completa, con el rótulo quemado en la imagen. "+
+           "No entra a la base de datos ni al respaldo.");
+    }
+    textoAyuda();
+    bd.parentNode && bd.parentNode.addEventListener("toggle",textoAyuda);
+    bd.appendChild(hp);
+
+    var file=document.createElement("input");
+    file.type="file"; file.accept="image/*"; file.style.display="none";
+    bd.appendChild(file);
+
+    var est=document.createElement("div"); est.className="hint"; est.style.marginTop="2px";
+    bd.appendChild(est);
+
+    var w=document.createElement("div"); w.className="foto";
+    var b1=document.createElement("button"); b1.type="button"; b1.className="pri"; b1.textContent="Tomar foto";
+    var b2=document.createElement("button"); b2.type="button"; b2.textContent="De la galería";
+    b1.onclick=function(){ file.setAttribute("capture","environment"); file.value=""; file.click(); };
+    b2.onclick=function(){ file.removeAttribute("capture"); file.value=""; file.click(); };
+    w.appendChild(b1); w.appendChild(b2); bd.appendChild(w);
+
+    file.onchange=function(){
+      if(!file.files||!file.files[0]) return;
+      textoAyuda();
+      b1.disabled=true; b2.disabled=true; est.textContent="Procesando…";
+      rotular(file.files[0], e, m, id, function(ok,msg){
+        b1.disabled=false; b2.disabled=false;
+        est.textContent=msg||"";
+        if(ok){ m.nfoto=(m.nfoto||0)+1; save(); badge(); }
+      });
+    };
+  });
+
+  var delM=document.createElement("button"); delM.type="button"; delM.className="del";
+  delM.style.width="100%"; delM.style.padding="14px"; delM.style.marginTop="6px";
+  delM.textContent="Eliminar esta muestra";
+  delM.onclick=function(){
+    if(!confirm("¿Eliminar la muestra "+(m.samp||"sin código")+"?\nNo se puede deshacer.")) return;
+    e.mx.splice(i,1); save(); closeSheet("shMx"); openEst(id); };
+  b.appendChild(delM);
+
+  renderAlertas();
+  openSheet("shMx");
+}
+g("cMx").onclick=function(){ closeSheet("shMx"); openEst(curE); };
+
+/* ---------- foto con rotulo quemado ---------- */
+var MAXPX=8000;
+
+/* Como se nombra y se rotula un control. El codigo corto es el que va en la
+   base; la palabra es para que el nombre del archivo se lea solo. */
+var CTRL_ARCH={STD:"Estandar", BKF:"Blanco_Fino", BKG:"Blanco_Grueso", DUP:"Duplicado"};
+var CTRL_TXT ={STD:"Estándar", BKF:"Blanco fino", BKG:"Blanco grueso", DUP:"Duplicado"};
+
+/* 1011117800_Estandar_OREAS_237b_01.jpg  ·  1011117801_Duplicado_Dup_Field_de_1011117800_01.jpg */
+function nombreFoto(m, id, n){
+  var p=[String(m.samp||id||"foto")];
+  if(esCtrl(m)){
+    p.push(CTRL_ARCH[m.ctrl] || m.ctrl || "Control");
+    if(m.std) p.push(m.std);
+    if(m.ctrl==="DUP"){
+      if(m.dupt) p.push(m.dupt);
+      if(m.ori)  p.push("de_"+m.ori);
+    }
+  }
+  p.push(n<10 ? "0"+n : String(n));
+  return p.join("_").replace(/[^A-Za-z0-9_-]/g,"_")+".jpg";
+}
+
+function cargarImagen(f, cb){
+  if(window.createImageBitmap){
+    createImageBitmap(f,{imageOrientation:"from-image"}).then(function(bm){ cb(bm); })
+      .catch(function(){ viaImg(f,cb); });
+  } else { viaImg(f,cb); }
+}
+function viaImg(f,cb){
+  var u=URL.createObjectURL(f), im=new Image();
+  im.onload=function(){ cb(im); setTimeout(function(){URL.revokeObjectURL(u);},2000); };
+  im.onerror=function(){ cb(null); };
+  im.src=u;
+}
+
+function rotular(f, e, m, id, done){
+  cargarImagen(f, function(im){
+    if(!im){ done(false,"No se pudo leer la imagen."); return; }
+    var iw=im.width||im.naturalWidth, ih=im.height||im.naturalHeight;
+    if(!iw||!ih){ done(false,"Imagen vacía."); return; }
+
+    var escalas=[1, 0.75, 0.5, 0.35], k=0;
+
+    function intentar(){
+      if(k>=escalas.length){ done(false,"La foto es demasiado grande para este teléfono."); return; }
+      var esc=Math.min(escalas[k], MAXPX/Math.max(iw,ih));
+      var W=Math.round(iw*esc), H=Math.round(ih*esc);
+      var c, x;
+      try{
+        c=document.createElement("canvas");
+        var alto=rotulo(null,W,0,e,m,id);
+        c.width=W; c.height=H+alto;
+        x=c.getContext("2d");
+        if(!x) throw 0;
+        x.fillStyle = esCtrl(m) ? "#4A1F10" : "#13294B";   // el control se ve distinto
+        x.fillRect(0,0,c.width,c.height);
+        x.drawImage(im,0,0,W,H);
+        rotulo(x,W,H,e,m,id);
+      }catch(err){ k++; intentar(); return; }
+
+      if(!c.toBlob){ done(false,"Este navegador no puede guardar la imagen."); return; }
+      c.toBlob(function(bl){
+        if(!bl){ k++; intentar(); return; }
+        var n=(m.nfoto||0)+1;
+        var nom=nombreFoto(m, id, n);
+        var okSave=compartirODescargar(nom, bl, "image/jpeg");
+        if(okSave){
+          done(true,"Guardada "+nom+"  ·  "+W+"×"+H+" px  ·  "+Math.round(bl.size/1024)+" KB"+
+                    (esc<1?"  (reducida al "+Math.round(esc*100)+"% por memoria)":""));
+        } else {
+          done(false,"No se pudo guardar la imagen.");
+        }
+        if(im.close) try{ im.close(); }catch(e2){}
+      },"image/jpeg",0.95);
+    }
+    intentar();
+  });
+}
+
+function rotulo(x,W,H,e,m,id){
+  var u=Math.max(11, Math.round(W/58));
+  var pad=Math.round(u*0.9);
+  var L=[], l3, l4;
+  L.push({t:(m.samp||"sin código"), s:Math.round(u*1.9), w:"700"});
+
+  if(esCtrl(m)){
+    /* Un control no tiene tramo ni geologia ni labor: lleva lo suyo. */
+    var c2=["MUESTRA DE CONTROL", CTRL_TXT[m.ctrl] || m.ctrl || "sin tipo"];
+    if(m.std) c2.push(m.std);
+    L.push({t:c2.join("   ·   "), s:Math.round(u*1.15), w:"600"});
+    l3=[];
+    if(e.fecha) l3.push(e.fecha);
+    if(e.geol) l3.push(e.geol);
+    if(e.area) l3.push(e.area);
+    if(l3.length) L.push({t:l3.join("   ·   "), s:u, w:"400"});
+    l4=[];
+    if(m.ctrl==="DUP"){
+      if(m.dupt) l4.push(m.dupt);
+      if(m.ori)  l4.push("original "+m.ori);
+      if(m.dupde) l4.push("duplicada de "+m.dupde);
+    }
+    if(m.aux) l4.push(m.aux);
+    if(m.com) l4.push(String(m.com).trim());
+    if(l4.length) L.push({t:l4.join("   ·   "), s:u, w:"400"});
+  } else {
+    var l2=[id];
+    if(m.from!==""&&m.to!=="") l2.push(r3(num(m.from))+" – "+r3(num(m.to))+" m");
+    if(m.lit) l2.push(m.lit);
+    L.push({t:l2.join("   ·   "), s:Math.round(u*1.15), w:"600"});
+    l3=[];
+    if(e.fecha) l3.push(e.fecha);
+    if(e.geol) l3.push(e.geol);
+    if(e.area) l3.push(e.area);
+    if(e.az!==""&&e.dip!=="") l3.push("canal "+e.az+"/"+e.dip);
+    if(l3.length) L.push({t:l3.join("   ·   "), s:u, w:"400"});
+    l4=[];
+    if(e.pref) l4.push(String(e.pref).trim());
+    if(m.ref) l4.push(m.ref);
+    if(m.tgt) l4.push(m.tgt);
+    if((m.st||[]).length){
+      var s0=m.st[0];
+      var ori=(s0.az!==""&&s0.az!=null?s0.az+"/":"")+(s0.dip!==""&&s0.dip!=null?s0.dip:"");
+      if(s0.t) l4.push(s0.t+(ori?" "+ori:""));
+    }
+    if(l4.length) L.push({t:l4.join("   ·   "), s:u, w:"400"});
+  }
+
+  var filete=Math.max(2,Math.round(u*0.22));
+  var alto=pad+filete;
+  for(var i=0;i<L.length;i++) alto+=Math.round(L[i].s*1.38);
+  alto+=pad;
+  if(!x) return alto;
+
+  x.fillStyle = esCtrl(m) ? "#C25A2A" : "#A8701A"; x.fillRect(0,H,W,filete);
+  var y=H+filete+pad;
+  x.textBaseline="top"; x.textAlign="left";
+  for(var j=0;j<L.length;j++){
+    x.fillStyle = j===0 ? "#FFFFFF" : (j===1 ? "#E8E4DA" : "#B9C2CF");
+    x.font=L[j].w+" "+L[j].s+'px -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
+    x.fillText(L[j].t, pad, y);
+    y+=Math.round(L[j].s*1.38);
+  }
+  return alto;
+}
+
+/* ---------- generador ZIP nativo (STORE, 0 dependencias) ---------- */
+var CRC_TAB=(function(){
+  var t=new Uint32Array(256);
+  for(var i=0;i<256;i++){
+    var c=i;
+    for(var k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);
+    t[i]=c;
+  }
+  return t;
+})();
+function crc32(u8){
+  var c=0xFFFFFFFF;
+  for(var i=0;i<u8.length;i++) c=CRC_TAB[(c^u8[i])&0xFF]^(c>>>8);
+  return (c^0xFFFFFFFF)>>>0;
+}
+function strToU8(str){
+  return new TextEncoder().encode("\uFEFF"+str);
+}
+function crearZip(archivos){
+  var chunks=[], central=[], offset=0;
+  var now=new Date();
+  var dosTime=((now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1))&0xFFFF;
+  var dosDate=(((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate())&0xFFFF;
+
+  archivos.forEach(function(f){
+    var nameBytes=new TextEncoder().encode(f.name);
+    var data=f.data;
+    var crc=crc32(data);
+    var lh=new Uint8Array(30+nameBytes.length);
+    var dv=new DataView(lh.buffer);
+    dv.setUint32(0,0x04034b50,true);
+    dv.setUint16(4,20,true);
+    dv.setUint16(6,0x0800,true);
+    dv.setUint16(8,0,true);
+    dv.setUint16(10,dosTime,true);
+    dv.setUint16(12,dosDate,true);
+    dv.setUint32(14,crc,true);
+    dv.setUint32(18,data.length,true);
+    dv.setUint32(22,data.length,true);
+    dv.setUint16(26,nameBytes.length,true);
+    dv.setUint16(28,0,true);
+    lh.set(nameBytes,30);
+    chunks.push(lh,data);
+
+    var cd=new Uint8Array(46+nameBytes.length);
+    var cv=new DataView(cd.buffer);
+    cv.setUint32(0,0x02014b50,true);
+    cv.setUint16(4,20,true);
+    cv.setUint16(6,20,true);
+    cv.setUint16(8,0x0800,true);
+    cv.setUint16(10,0,true);
+    cv.setUint16(12,dosTime,true);
+    cv.setUint16(14,dosDate,true);
+    cv.setUint32(16,crc,true);
+    cv.setUint32(20,data.length,true);
+    cv.setUint32(24,data.length,true);
+    cv.setUint16(28,nameBytes.length,true);
+    cv.setUint16(30,0,true);
+    cv.setUint16(32,0,true);
+    cv.setUint16(34,0,true);
+    cv.setUint16(36,0,true);
+    cv.setUint32(38,0,true);
+    cv.setUint32(42,offset,true);
+    cd.set(nameBytes,46);
+    central.push(cd);
+
+    offset+=lh.length+data.length;
+  });
+
+  var cdOffset=offset, cdSize=0;
+  central.forEach(function(c){ chunks.push(c); cdSize+=c.length; });
+
+  var eocd=new Uint8Array(22);
+  var ev=new DataView(eocd.buffer);
+  ev.setUint32(0,0x06054b50,true);
+  ev.setUint16(4,0,true);
+  ev.setUint16(6,0,true);
+  ev.setUint16(8,archivos.length,true);
+  ev.setUint16(10,archivos.length,true);
+  ev.setUint32(12,cdSize,true);
+  ev.setUint32(16,cdOffset,true);
+  ev.setUint16(20,0,true);
+  chunks.push(eocd);
+
+  return new Blob(chunks,{type:"application/zip"});
+}
+
+/* ---------- exportacion ---------- */
+function q(v){ v=(v==null?"":String(v)); return /[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+function tocsv(h,rows){ var L=[h.join(",")];
+  rows.forEach(function(r){ L.push(r.map(q).join(",")); }); return L.join("\r\n"); }
+
+function TAB(){
+  var C=[],SU=[],SA=[],LI=[],AL=[],MI=[],ST=[],DC=[];
+  S.ord.forEach(function(id){
+    var e=S.est[id]; if(!e) return;
+    C.push([id,e.x,e.y,e.z,r3(depth(e)),e.area,e.geol,e.collar,e.fecha,e.obs]);
+    (e.mx||[]).forEach(function(m){
+      var lar=largo(m);
+      /* La frase inicial de la estacion describe la labor, y una muestra de
+         control no pertenece a ninguna: va solo con su propio comentario. */
+      var com = esCtrl(m) ? (m.com||"").trim()
+                          : ((e.pref||"").trim()+" "+(m.com||"").trim()).trim();
+      SA.push([id,m.samp,m.from,m.to,lar,m.sup,m.cls,m.ctrl,m.dupt,m.ori,m.dupde,m.std,
+               e.fecha,e.geol,m.aux,com,""]);
+      if(esCtrl(m)) return;
+      if(e.az!==""||e.dip!=="") SU.push([m.samp,id,m.from,e.az,e.dip]);
+      if(m.lit) LI.push([m.samp,id,m.from,m.to,m.lit,com]);
+      if(m.at)  AL.push([m.samp,id,m.from,m.to,m.asec,m.at,m.am,m.ast,m.ai,m.ac]);
+      if(m.mt||m.ms||m.mo||m.mi||m.mc) MI.push([m.samp,id,m.from,m.to,m.mt,m.ms,m.mo,m.mi,m.mc]);
+      (m.st||[]).forEach(function(s){
+        ST.push([m.samp,id,s.from,s.to,s.t,s.e,s.c,s.az,s.dip,com,""]); });
+      if(m.tgt||m.afl||m.ref||m.tit||m.pv||m.cl)
+        DC.push([id,m.samp,m.tgt,m.afl,m.ref,m.tit,m.pv,m.pl,m.pj,m.ph,m.pg,m.pm,m.cl,m.ca,m.cp,m.comp,m.tex]);
+    });
+  });
+  return [
+   ["Collar",["Holeid","East","North","Elev","Depth","Id_Area","Id_Geologist","Id_Collar_Type","DrillDate","Observaciones"],C],
+   ["Survey",["Samp_id","Holeid","Depth","Azimuth","Dip"],SU],
+   ["Sample",["Holeid","Samp_id","From","To","Length","Id_Support_Type","Id_Sample_Type","Id_Control_Type","Id_Duplicate_Type","Samp_id_Original","Samp_id_Duplicate","Id_Standard_Code","Log_Date","Id_Geologist","Auxiliar","Comments","auxiliar"],SA],
+   ["Lithology",["Samp_id","Holeid","From","To","Id_NewLitho","Comments1"],LI],
+   ["Alteration",["Samp_id","Holeid","From","To","Secuencia","Id_Alt_Type_1","Id_Alt_Min_1","Id_Alt_Style_1","Id_Alt_Int_1","Comments"],AL],
+   ["Mineralization",["Samp_id","Holeid","From","To","Id_Min_Type","Id_Min_Sulf","Id_Min_OtherMin","Id_Min_Int","Comments"],MI],
+   ["Structure",["Samp_id","Holeid","From","To","Id_Structure_Type","True_Thickness_cm","Id_StruComp","Azimut","Dip","Comments","auxiliar"],ST],
+   ["Datos_Complementarios",["Holeid","Samp_id","Target","TipoAfloramiento","ReferenciaLocal","Titulo","PctVenillas","PctLimonita","PctJarosita","PctHematita","PctGoetita","PctManganeso","CanalLargo","CanalAncho","CanalProfundidad","Composicion","Textura"],DC]
+  ];
+}
+function outPanel(t,s,html){ g("oName").textContent=t; g("oMeta").textContent=s;
+  g("oBody").innerHTML=html; openSheet("shOut"); }
+
+g("bExp").onclick=function(){
+  var T=TAB(), tot=0;
+  T.forEach(function(t){ tot+=t[2].length; });
+
+  var errList=[];
+  S.ord.forEach(function(id){
+    var e=S.est[id]; if(!e) return;
+    (e.mx||[]).forEach(function(m, idx){
+      var v=validarMx(e, m, idx);
+      v.errs.forEach(function(er){ errList.push(id+" / "+(m.samp||"sin código")+": "+er); });
+    });
+  });
+
+  var h='';
+  if(errList.length){
+    h+='<div class="note bad"><b>Atención ('+errList.length+' errores detectados):</b><br>• '+
+       errList.slice(0,8).join("<br>• ")+(errList.length>8?"<br>… y "+(errList.length-8)+" más":"")+'</div>';
+  }
+  h+='<button type="button" class="add" id="bZipAll" style="border-style:solid;background:var(--navy);color:#fff;margin-bottom:14px">'+
+     '⬇ Descargar TODO en un solo ZIP ('+tot+' filas)</button>';
+  h+='<div class="note">Cada tabla va a su hoja del <b>Muestreo_EGM.xlsm</b>. '+
+     'Pegue <b>desde la fila 3</b>: la fila 1 son los títulos y la 2 los nombres Datamine.</div>';
+  outPanel("Exportar",tot+" filas en 8 hojas",h+'<div id="tabs"></div>');
+
+  g("bZipAll").onclick=function(){
+    if(errList.length && !confirm("Hay "+errList.length+" error(es) sin corregir.\n\n"+
+       errList[0]+"\n\n¿Exportar así de todos modos?")) return;
+    var files=T.map(function(t){
+      return {name: t[0]+"_"+hoy()+".csv", data: strToU8(tocsv(t[1],t[2]))};
+    });
+    var zipBlob=crearZip(files);
+    dlBlob("Libreta_EGM_"+hoy()+".zip", zipBlob);
+  };
+
+  var host=g("tabs");
+  T.forEach(function(t){
+    var r=document.createElement("div"); r.className="tbl";
+    r.innerHTML='<span>'+t[0]+'</span><em>'+t[2].length+' filas</em>';
+    var b1=document.createElement("button"); b1.type="button"; b1.textContent="Bajar";
+    b1.onclick=function(){ dl(t[0]+"_"+hoy()+".csv",tocsv(t[1],t[2])); };
+    var b2=document.createElement("button"); b2.type="button"; b2.textContent="Ver";
+    b2.onclick=function(){
+      var p=document.createElement("pre"); p.textContent=tocsv(t[1],t[2]);
+      r.parentNode.insertBefore(p,r.nextSibling); b2.disabled=true; };
+    r.appendChild(b1); r.appendChild(b2); host.appendChild(r);
+  });
+};
+
+g("bBak").onclick=function(){
+  var j=JSON.stringify({v:1,fecha:new Date().toISOString(),S:S});
+  dl("Respaldo_roca_"+hoy()+".json",j,"application/json");
+  outPanel("Respaldo","Recuperar o pasar a otro equipo",
+   '<div class="note ok">Se generó <b>Respaldo_roca_'+hoy()+'.json</b>. Guárdelo en Archivos o fuera del teléfono al final del día.</div>'+
+   '<div class="f"><label>Restaurar desde archivo .json</label>'+
+   '<input type="file" id="impFile" accept=".json,application/json" style="padding:10px"></div>'+
+   '<div class="f"><label>O pegar el texto del JSON manualmente</label><textarea id="imp" placeholder="Pegue aquí el contenido del JSON…"></textarea></div>'+
+   '<button type="button" class="opt pri" id="doImp" style="width:100%">Restaurar desde texto pegado</button>');
+
+  function aplicarJson(txt){
+    try{
+      var o=JSON.parse(txt); var n=o.S||o;
+      if(!n.est||!n.ord) throw 0;
+      if(!confirm("Esto reemplaza las "+S.ord.length+" estaciones actuales por las "+n.ord.length+" del respaldo. ¿Seguir?")) return;
+      S=n; save(); closeSheet("shOut"); drawList(); alert("Respaldo restaurado correctamente.");
+    }catch(e){ alert("El archivo o texto no es un respaldo válido."); }
+  }
+
+  g("impFile").onchange=function(){
+    var f=this.files&&this.files[0]; if(!f) return;
+    var rd=new FileReader();
+    rd.onload=function(){ aplicarJson(rd.result); };
+    rd.readAsText(f);
+  };
+  g("doImp").onclick=function(){ aplicarJson(g("imp").value); };
+};
+
+g("bCfg").onclick=function(){
+  var inc=[], est=0, mx=0, sinaz=0, sinest=0, sincoord=0;
+  S.ord.forEach(function(id){ var e=S.est[id]; if(!e) return; est++;
+    if(!e.area||!e.geol||!e.collar) inc.push(id+": faltan datos de estación");
+    if(!e.x||!e.y) sincoord++;
+    if(e.az===""||e.dip==="") sinaz++;
+    validarEst(e).forEach(function(w){ inc.push(id+": "+w); });
+    (e.mx||[]).forEach(function(m, idx){ mx++;
+      var val=validarMx(e, m, idx);
+      val.errs.forEach(function(er){ inc.push(id+" / "+(m.samp||"sin código")+": "+er); });
+      val.warns.forEach(function(wr){ inc.push(id+" / "+(m.samp||"sin código")+": "+wr); });
+      if(!esCtrl(m) && !(m.st||[]).length) sinest++;
+    });
+  });
+  var h='<div class="kv"><span>Estaciones</span><b>'+est+'</b></div>'+
+        '<div class="kv"><span>Muestras</span><b>'+mx+'</b></div>'+
+        '<div class="kv"><span>Sin coordenada (se digitaliza)</span><b>'+sincoord+'</b></div>'+
+        '<div class="kv"><span>Estaciones sin azimut o dip</span><b>'+sinaz+'</b></div>'+
+        '<div class="kv"><span>Sin estructura</span><b>'+sinest+'</b></div>';
+  if(sinaz) h+='<div class="note" style="margin-top:16px">'+sinaz+' estaciones sin orientación. '+
+    'Ese es justo el vacío que impide resolver la geometría de las vetas.</div>';
+  if(inc.length) h+='<div class="note bad" style="margin-top:12px"><b>Revisar ('+inc.length+')</b><br>• '+
+    inc.slice(0,25).join("<br>• ")+(inc.length>25?"<br>… y "+(inc.length-25)+" más":"")+'</div>';
+  else if(mx) h+='<div class="note ok" style="margin-top:16px">Todo lo obligatorio y reglas geológicas están correctos.</div>';
+
+  if(est) h+='<div class="note" style="margin-top:22px">Cuando ya haya corrido '+
+    '<b>ImportarCampo</b> y vea estas estaciones en las hojas del Muestreo_EGM, '+
+    'puede dejar la libreta en blanco para la próxima salida. Primero se guarda el respaldo.</div>'+
+    '<button type="button" class="del" id="bVac" style="width:100%;padding:14px;margin-top:10px">'+
+    'Vaciar la libreta ('+est+' estaciones, '+mx+' muestras)</button>';
+
+  outPanel("Ajustes y control","Estado de la libreta",h);
+  if(est) g("bVac").onclick=function(){ vaciar(est,mx); };
+};
+
+function vaciar(est,mx){
+  if(!confirm("¿Ya corrió ImportarCampo y vio estas "+est+" estaciones en las hojas "+
+              "del Muestreo_EGM?\n\nSi no las ha visto allá, cancele: los CSV del "+
+              "teléfono no son un respaldo.")) return;
+
+  dl("Respaldo_roca_"+hoy()+".json",
+     JSON.stringify({v:1,fecha:new Date().toISOString(),S:S}),"application/json");
+
+  if(!confirm("Se guardó el respaldo del "+hoy()+".\n\nAhora sí: borrar las "+est+
+              " estaciones y "+mx+" muestras de este teléfono.\nNo se puede deshacer.")) return;
+
+  S.est={}; S.ord=[];
+  save();
+  closeSheet("shOut");
+  drawList();
+  alert("Libreta en blanco. Se conservaron el área, el geólogo y el tipo de labor.\n\n"+
+        "La próxima muestra arranca libre: mire en el Excel cuál fue el último código.");
+}
+g("cOut").onclick=function(){ closeSheet("shOut"); };
+g("cPick").onclick=function(){ cerrarPick(); };
+g("pQ").addEventListener("input",pintarPick);
+
+g("q").addEventListener("input",drawList);
+window.addEventListener("beforeunload",function(){ save(true); });
+g("gradFix").onclick=function(){
+  var n=migrarCoords(true);
+  revisarGrados();
+  if(curE && g("shEst").classList.contains("on")) openEst(curE);
+  alert(n+" coordenada(s) convertidas a Origen Bogotá.");
+};
+
+load(); drawList(); revisarGrados();
+
+/* El service worker guarda la libreta en el telefono la primera vez que se abre
+   con internet. De ahi en adelante arranca sin senal. Si el navegador no lo
+   soporta, o la pagina no esta en https, no pasa nada: sigue funcionando. */
+if("serviceWorker" in navigator){
+  try{
+    navigator.serviceWorker.register("sw.js",{scope:"./"})
+      .catch(function(){ /* sin cache: la libreta igual funciona en linea */ });
+  }catch(e){}
+}
+</script>
+</body>
+</html>
